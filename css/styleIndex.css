@@ -1,4 +1,9 @@
-.register-container {
+/* ===========================
+   LOGIN PAGE STYLING
+   =========================== */
+
+/* Container für Login-Inhalt */
+.login-container {
     max-width: 400px;
     margin: 100px auto;
     padding: 0 20px;
@@ -6,12 +11,14 @@
     font-family: 'Bebas Neue', sans-serif;
   }
   
-  .register-title {
+  /* Titel "LOGIN" */
+  .login-title {
     font-size: 2.5rem;
     margin-bottom: 30px;
   }
   
-  .register-form {
+  /* Login-Formular-Styling */
+  .login-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -20,8 +27,8 @@
     border-radius: 8px;
   }
   
-  .register-form select,
-  .register-form input {
+  /* Eingabefelder */
+  .login-form input {
     padding: 12px;
     font-size: 1.1rem;
     border: none;
@@ -29,22 +36,25 @@
     font-family: inherit;
   }
   
-  .register-form select:focus,
-  .register-form input:focus {
+  /* Fokus-Styling */
+  .login-form input:focus {
     outline: 2px solid #888;
   }
   
-  .login-hint {
+  /* Hinweis unter dem Formular */
+  .register-hint {
     font-size: 1rem;
     margin: 10px 0;
   }
   
-  .login-hint a {
+  /* Link zur Registrierung */
+  .register-hint a {
     color: black;
     text-decoration: underline;
   }
   
-  .register-btn {
+  /* Login-Button */
+  .login-btn {
     padding: 12px;
     background-color: #e6e6e6;
     font-size: 1.2rem;
@@ -55,23 +65,24 @@
     transition: background-color 0.3s;
   }
   
-  .register-btn:hover {
+  .login-btn:hover {
     background-color: #ccc;
   }
   
+  /* ===========================
+     Responsive Anpassung
+     =========================== */
   @media (max-width: 768px) {
-    .register-container {
+    .login-container {
       margin: 60px auto;
     }
   
-    .register-form {
+    .login-form {
       padding: 20px;
     }
   
-    .register-form select,
-    .register-form input,
-    .register-btn {
+    .login-form input,
+    .login-btn {
       font-size: 1rem;
     }
-  }
-  
+  }  
