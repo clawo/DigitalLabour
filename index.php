@@ -9,7 +9,7 @@
 <?php include '../includes/header.php'; ?>
 
 <body>
-    <p>Text</p>
+    <p>Testumgebung</p>
 </body>
 
 <?php include '../includes/footer.php'; ?>
