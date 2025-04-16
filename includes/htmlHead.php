@@ -10,7 +10,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 $cssPath = __DIR__ . '/../css/style' . ucfirst($currentPage) . '.css';
 
 // Absoluter Link zur CSS-Datei im Web (funktioniert in allen Unterordnern)
-$cssLink = '/digitallabour/css/style' . ucfirst($currentPage) . '.css';
+$cssLink = '/css/style' . ucfirst($currentPage) . '.css';
 ?>
 
 <!-- ========== Head-Bereich ========== -->
@@ -23,7 +23,7 @@ $cssLink = '/digitallabour/css/style' . ucfirst($currentPage) . '.css';
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <!-- Global CSS -->
-<link rel="stylesheet" href="/digitallabour/css/styleGlobal.css">
+<link rel="stylesheet" href="/css/styleGlobal.css">
 
 <!-- Seitenbezogenes CSS automatisch laden -->
 <?php if (file_exists($cssPath)): ?>
