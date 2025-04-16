@@ -1,17 +1,27 @@
-<!DOCTYPE html>
-<html lang="de">
+<?php include 'includes/header.php'; ?>
 
-<head>
-    <?php include '../includes/htmlHead.php'; ?>
-    <title>Titel</title>
-</head>
+<!-- ==========================
+     Login-Bereich
+     ========================== -->
+<main class="login-container">
+  <h1 class="login-title">LOGIN</h1>
 
-<?php include '../includes/header.php'; ?>
+  <!-- Login-Formular -->
+  <form class="login-form" method="post" action="dein-login-endpunkt.php">
+    <!-- E-Mail-Feld -->
+    <input type="email" name="email" placeholder="Email Adresse" required>
 
-<body>
-    <p>Text</p>
-</body>
+    <!-- Passwort-Feld -->
+    <input type="password" name="password" placeholder="Passwort" required>
 
-<?php include '../includes/footer.php'; ?>
+    <!-- Hinweis zur Registrierung -->
+    <p class="register-hint">
+      Noch keinen Account? <a href="register.php">Jetzt registrieren!</a>
+    </p>
 
-</html>
+    <!-- Login-Button -->
+    <button type="submit" class="login-btn">Login</button>
+  </form>
+</main>
+
+<?php include 'includes/footer.php'; ?>
