@@ -34,6 +34,9 @@ $cssLink = '../css/style' . ucfirst($currentPage) . '.css';
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
+<!-- Browser Icon -->
+<link rel="icon" href="images/logo.png" type="image/png">
+
 <!-- ==============================
      Globales Stylesheet (für die gesamte Website)
      ============================== -->
