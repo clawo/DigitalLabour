@@ -3,15 +3,6 @@ session_start();
 
 require_once 'db_connect.php';
 $db = getDB();
-
-// Testabfrage (optional, nur zum Testen – kann später entfernt werden)
-try {
-    $stmt = $db->query("SELECT NOW()");
-    $row = $stmt->fetch();
-    echo "📅 Datenbankzeit: " . $row[0];
-} catch (PDOException $e) {
-    echo "❌ Fehler bei der Testabfrage: " . $e->getMessage();
-}
 ?>
 
 <meta charset="UTF-8">
