@@ -5,6 +5,7 @@ $db = getDB();
 
 // Aktuellen Dateinamen ohne .php holen → z.B. "login"
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
+echo "<!-- Aktuelle Seite: $currentPage -->";
 
 // Absoluter Pfad auf dem Server, für file_exists()
 $cssPath = __DIR__ . '/../css/style' . ucfirst($currentPage) . '.css';
