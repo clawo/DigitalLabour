@@ -16,4 +16,7 @@
 <!-- <link rel="preload" href="images/Hintergrund.svg" as="image" /> -->
 
 <!-- include php-files / maybe database -->
- <?php include('../includes/db_connect.php'); // connect database ?>
+ <?php
+ session_start();
+ include('../includes/db_connect.php'); // connect database
+ ?>
