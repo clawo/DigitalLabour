@@ -1,9 +1,16 @@
-<!-- Schriftart einbinden -->
+<!-- 
+  HEADER-BEREICH
+  Diese Datei beinhaltet den Header mit Logo, Navigation und Login-Button.
+  Sie wird per PHP include() eingebunden.
+-->
+
+<!-- Schriftart (Bebas Neue) einbinden – globaler Font für Header -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <style>
+  /* ========== Allgemeines Header-Layout ========== */
   .header {
     width: 100%;
     max-width: 1920px;
@@ -18,12 +25,14 @@
     box-sizing: border-box;
   }
 
+  /* ========== Logo-Styling ========== */
   .logo img {
     height: 150px;
     max-height: 200px;
     width: auto;
   }
 
+  /* ========== Navigation (zentriert) ========== */
   .nav {
     display: flex;
     gap: 100px;
@@ -43,6 +52,7 @@
     color: #555;
   }
 
+  /* ========== Login-Button ========== */
   .login-button {
     background-color: #1e2a38;
     color: white;
@@ -57,6 +67,7 @@
     background-color: #2e3e50;
   }
 
+  /* ========== Responsive Design für Mobile ========== */
   @media (max-width: 768px) {
     .header {
       flex-direction: column;
@@ -76,14 +87,20 @@
   }
 </style>
 
+<!-- ========== HTML-Struktur des Headers ========== -->
 <div class="header">
+  <!-- Logo mit Verlinkung zur Startseite -->
   <div class="logo">
     <a href="/"><img src="../images/logo.png" alt="Examwise Logo"></a>
   </div>
+
+  <!-- Navigation (zentriert) -->
   <div class="nav">
     <a href="#">Suchen</a>
     <a href="#">Für Dozenten</a>
     <a href="#">Für Studenten</a>
   </div>
-  <a href="#" class="login-button">Login-Button</a>
+
+  <!-- Login-Button (rechts) -->
+  <a href="../pages/login.php" class="login-button">Login</a>
 </div>
