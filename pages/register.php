@@ -1,10 +1,4 @@
 <?php
-// ==============================
-//  Seite: Registrierung
-//  Beschreibung: Anzeige des Registrierungsformulars
-//  Eingebunden: Header, Footer, Styles automatisch per htmlHead
-// ==============================
-
 include '../includes/htmlHead.php';
 include '../includes/header.php';
 ?>
@@ -21,9 +15,9 @@ include '../includes/header.php';
 
     <!-- Dropdown zur Auswahl der Rolle -->
     <select name="rolle" required>
-      <option value="" disabled selected>(Dropdown) Ich bin Student/Dozent</option>
-      <option value="student">Student</option>
-      <option value="dozent">Dozent</option>
+      <option value="" disabled selected>Ich bin...</option>
+      <option value="student">Student*in</option>
+      <option value="dozent">Dozent*in</option>
     </select>
 
     <!-- Benutzerinformationen -->
