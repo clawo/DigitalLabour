@@ -5,32 +5,33 @@
 
 session_start();
 
-// Datenbankverbindung herstellen
 require_once 'db_connect.php';
 $db = getDB();
 
 // Aktuellen Dateinamen ohne ".php"-Endung holen
-// Beispiel: "login.php" → "login"
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 
-// Dynamischer CSS-Dateiname, z. B. "styleLogin.css"
-$cssFile = "css/style" . ucfirst($currentPage) . ".css";
+// Absoluter Pfad zur CSS-Datei
+$cssPath = __DIR__ . '/../css/style' . ucfirst($currentPage) . '.css';
+
+// Relativer Link zur CSS-Datei (für HTML <link>)
+$cssLink = 'css/style' . ucfirst($currentPage) . '.css';
 ?>
 
 <!-- ========== Basis-HTML-Kopf ========== -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<base href="/digitallabour/"> <!-- Basis-URL für relative Pfade -->
+<base href="/digitallabour/"> <!-- Stellt sicher, dass relative Pfade stimmen -->
 
-<!-- ========== Fonts einbinden ========== -->
+<!-- ========== Fonts ========== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
-<!-- ========== Globales CSS (für alle Seiten gültig) ========== -->
+<!-- ========== Globales CSS ========== -->
+<link rel="stylesheet" href="css/styleGlobal.css">
 
-
-<!-- ========== CSS für spezifische Seite automatisch laden ========== -->
-<?php if (file_exists($cssFile)): ?>
-  <link rel="stylesheet" href="<?= $cssFile ?>">
+<!-- ========== Automatisch korrektes CSS einbinden ========== -->
+<?php if (file_exists($cssPath)): ?>
+  <link rel="stylesheet" href="<?= $cssLink ?>">
 <?php endif; ?>
