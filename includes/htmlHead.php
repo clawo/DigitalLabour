@@ -28,7 +28,7 @@ $cssFile = "css/style" . ucfirst($currentPage) . ".css";
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <!-- ========== Globales CSS (für alle Seiten gültig) ========== -->
-<link rel="stylesheet" href="css/styleGlobal.css">
+
 
 <!-- ========== CSS für spezifische Seite automatisch laden ========== -->
 <?php if (file_exists($cssFile)): ?>
