@@ -1,4 +1,7 @@
-<?php include '../includes/header.php'; ?>
+<?php
+include '../includes/htmlHead.php';
+include '../includes/header.php';
+?>
 
 <!-- ==========================
      Login-Bereich
