@@ -1,10 +1,3 @@
-/* ===============================
-   STYLING: Register Page
-   Seitenabhängiges CSS: register.php
-   Autor: Frontend-Team
-   =============================== */
-
-/* Container für das Register-Layout */
 .register-container {
     max-width: 400px;
     margin: 100px auto;
@@ -13,13 +6,11 @@
     font-family: 'Bebas Neue', sans-serif;
   }
   
-  /* Überschrift */
   .register-title {
     font-size: 2.5rem;
     margin-bottom: 30px;
   }
   
-  /* Formular-Grundlayout */
   .register-form {
     display: flex;
     flex-direction: column;
@@ -29,7 +20,6 @@
     border-radius: 8px;
   }
   
-  /* Eingabefelder & Dropdown */
   .register-form select,
   .register-form input {
     padding: 12px;
@@ -44,7 +34,6 @@
     outline: 2px solid #888;
   }
   
-  /* Hinweis zur Umleitung auf Login */
   .login-hint {
     font-size: 1rem;
     margin: 10px 0;
@@ -55,7 +44,6 @@
     text-decoration: underline;
   }
   
-  /* Submit-Button */
   .register-btn {
     padding: 12px;
     background-color: #e6e6e6;
@@ -71,9 +59,6 @@
     background-color: #ccc;
   }
   
-  /* ===============================
-     RESPONSIVE: Mobile Geräte
-     =============================== */
   @media (max-width: 768px) {
     .register-container {
       margin: 60px auto;
@@ -88,4 +73,4 @@
     .register-btn {
       font-size: 1rem;
     }
-  }
+  }  
