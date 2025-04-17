@@ -38,7 +38,7 @@
         <label>() MULTIPLE CHOICE</label>
         <label>() LÜCKENTEXT</label>
         <label>() FALLANALYSE</label>
-        <div class="input-line">() ANDERE: <input type="text" /></div>
+        <label class="input-line"><input type="checkbox"> ANDERE:<input type="text" /></label>
       </div>
     </div>
 

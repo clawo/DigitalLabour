@@ -52,6 +52,12 @@ body {
   gap: 10px;
 }
 
+.format-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 input[type="text"] {
   padding: 4px;
   margin-top: 5px;
