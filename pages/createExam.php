@@ -10,6 +10,7 @@
 
 
 <body>
+<div class="body-wrapper">
 <div class="container">
     <!-- Linke Seite -->
     <div class="left">
@@ -75,6 +76,7 @@
       <button class="button">Erstellen</button>
     </div>
   </div>
+</div>
 </body>
 
 <?php include '../includes/footer.php'; ?>
