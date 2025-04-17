@@ -1,10 +1,17 @@
-<!-- Schriftarten & Icons -->
+<!-- 
+  FOOTER-BEREICH
+  Enthält Logo, Links, Social Media Icons und rechtliche Hinweise.
+  Eingebunden per PHP include() auf jeder Seite.
+-->
+
+<!-- Schriftart & FontAwesome Icons (für Socials) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
+  /* ========== Allgemeiner Footer-Container ========== */
   .footer {
     background-color: #1e2a38;
     color: white;
@@ -12,6 +19,7 @@
     font-family: 'Bebas Neue', sans-serif;
   }
 
+  /* ========== Oberer Footer-Bereich (Logo + Spalten) ========== */
   .footer-top {
     display: flex;
     justify-content: center;
@@ -48,6 +56,7 @@
     text-decoration: underline;
   }
 
+  /* ========== Trennlinie ========== */
   .footer-divider {
     height: 1.5px;
     width: 35%;
@@ -55,6 +64,7 @@
     margin: 20px auto;
   }
 
+  /* ========== Social Media Icons ========== */
   .social-icons {
     display: flex;
     justify-content: center;
@@ -72,6 +82,7 @@
     color: #ccc;
   }
 
+  /* ========== Unterer Footer-Bereich ========== */
   .footer-bottom {
     background-color: #161E26;
     color: white;
@@ -84,6 +95,7 @@
     min-height: 60px;
   }
 
+  /* Copyright mittig */
   .footer-bottom .copyright {
     position: absolute;
     left: 50%;
@@ -93,6 +105,7 @@
     white-space: nowrap;
   }
 
+  /* Rechtsliegende Links (AGB, Impressum, Datenschutz) */
   .footer-bottom .links {
     margin-left: auto;
     display: flex;
@@ -110,6 +123,7 @@
     text-decoration: underline;
   }
 
+  /* ========== Responsive Anpassungen für Mobile ========== */
   @media (max-width: 768px) {
     .footer-top {
       flex-direction: column;
@@ -124,7 +138,6 @@
 
     .footer-bottom {
       flex-direction: column;
-      position: relative;
       padding-top: 40px;
     }
 
@@ -141,19 +154,27 @@
   }
 </style>
 
+<!-- ========== HTML-Struktur des Footers ========== -->
 <div class="footer">
   <div class="footer-top">
+    <!-- Logo -->
     <div class="footer-logo">
       <img src="../images/logo.png" alt="Examwise Logo">
     </div>
+
+    <!-- Spalte 1: Dozenten -->
     <div class="footer-column">
       <h3>Für Dozenten</h3>
       <a href="#">Mock erstellen</a>
     </div>
+
+    <!-- Spalte 2: Studenten -->
     <div class="footer-column">
       <h3>Für Studenten</h3>
       <a href="#">Mock beantworten</a>
     </div>
+
+    <!-- Spalte 3: Allgemeines -->
     <div class="footer-column">
       <h3>Für Alle</h3>
       <a href="#">Kontakt</a>
@@ -161,8 +182,10 @@
     </div>
   </div>
 
+  <!-- Trennlinie -->
   <div class="footer-divider"></div>
 
+  <!-- Social Media Icons -->
   <div class="social-icons">
     <a href="#"><i class="fab fa-facebook-f"></i></a>
     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -172,6 +195,7 @@
   </div>
 </div>
 
+<!-- Unterer Bereich: Copyright + Links -->
 <div class="footer-bottom">
   <div class="copyright">© Copyright 2025</div>
   <div class="links">
