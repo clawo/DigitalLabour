@@ -4,9 +4,9 @@
 <head>
     <?php include '../includes/htmlHead.php'; ?>
     <title>Mock Exam</title>
-    <?php include '../includes/header.php'; ?>
+    
 </head>
-
+<?php include '../includes/header.php'; ?>
 
 
 <body>
@@ -21,11 +21,15 @@
 
       <div class="section-title">2. PRÜFUNGSFORM:</div>
       <div class="checkbox-group">
-        <label>(X) SCHRIFTLICH</label>
-        <label>() MÜNDLICH</label>
-        <label>() DIGITAL</label>
-        <div class="input-line">() ANDERE: <input type="text" /></div>
-      </div>
+  <label><input type="checkbox" checked> SCHRIFTLICH</label>
+  <label><input type="checkbox"> MÜNDLICH</label>
+  <label><input type="checkbox"> DIGITAL</label>
+  <label class="input-line">
+    <input type="checkbox"> ANDERE:
+    <input type="text" />
+  </label>
+</div>
+
 
       <div class="section-title">FORMAT:</div>
       <div class="format-group">
