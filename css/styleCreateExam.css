@@ -8,18 +8,19 @@
 
 body {
   font-family: Arial, sans-serif;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   background-color: #fff;
 }
 
 .container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 40px;
 }
 
-.left, .right {
+.left,
+.right {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -46,16 +47,21 @@ body {
   font-weight: bold;
 }
 
-.checkbox-group label {
+.checkbox-group label,
+.format-group label {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.format-group label {
+.input-line {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.input-line input[type="text"] {
+  flex: 1;
 }
 
 input[type="text"] {
@@ -69,11 +75,14 @@ table {
   width: 100%;
 }
 
-table, th, td {
+table,
+th,
+td {
   border: 1px solid black;
 }
 
-th, td {
+th,
+td {
   padding: 6px;
   text-align: left;
 }
@@ -93,14 +102,4 @@ th, td {
   cursor: pointer;
   align-self: flex-end;
   margin-top: auto;
-}
-
-.input-line {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.input-line input {
-  flex: 1;
 }
