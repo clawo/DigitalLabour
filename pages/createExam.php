@@ -4,9 +4,10 @@
 <head>
     <?php include '../includes/htmlHead.php'; ?>
     <title>Mock Exam</title>
+    <?php include '../includes/header.php'; ?>
 </head>
 
-<?php include '../includes/header.php'; ?>
+
 
 <body>
 <div class="container">
