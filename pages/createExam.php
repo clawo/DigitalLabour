@@ -3,13 +3,68 @@
 
 <head>
     <?php include '../includes/htmlHead.php'; ?>
-    <title>Titel</title>
+    <title>Mock Exam</title>
 </head>
 
 <?php include '../includes/header.php'; ?>
 
 <body>
-    <p>Text</p>
+<div class="column">
+    <div class="tag">MODUL: 1</div>
+    <div class="tag">TITEL: MOCK EXAM</div>
+
+    <div class="label">1. LERNZIELE / KOMPETENZEN</div>
+    <div class="box"></div>
+
+    <div class="label">2. PRÜFUNGSFORM:</div>
+    <div class="checkbox-group">
+      <label>(X) SCHRIFTLICH</label>
+      <label>() MÜNDLICH</label>
+      <label>() DIGITAL</label>
+      <label>() ANDERE: <input type="text" /></label>
+    </div>
+
+    <div class="label">FORMAT:</div>
+    <div class="checkbox-group">
+      <label>(X) OFFENE FRAGEN</label>
+      <label>() MULTIPLE CHOICE</label>
+      <label>() LÜCKENTEXT</label>
+      <label>() FALLANALYSE</label>
+      <label>() ANDERE: <input type="text" /></label>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="label">3. ANZAHL DER FRAGEN:</div>
+    <input type="text">
+
+    <div class="label">4. AUFGABENÜBERSICHT</div>
+    <table>
+      <tr>
+        <th>AUFGABE:</th>
+        <th>THEMA:</th>
+        <th>KERNKOMPETENZEN:</th>
+        <th>PUNKTE:</th>
+      </tr>
+      <tr><td>A1</td><td></td><td></td><td></td></tr>
+      <tr><td>A2</td><td></td><td></td><td></td></tr>
+      <tr><td>B1</td><td></td><td></td><td></td></tr>
+      <tr><td>B2</td><td></td><td></td><td></td></tr>
+      <tr><td>C1</td><td></td><td></td><td></td></tr>
+      <tr><td>C2</td><td></td><td></td><td></td></tr>
+    </table>
+
+    <div class="label">5. ERWARTUNGSHORIZONT / BEWERTUNGSKRITERIEN:</div>
+    <label>AUFGABE A1: <input type="text"></label>
+    <label>AUFGABE A2: <input type="text"></label>
+    <label>AUFGABE B1: <input type="text"></label>
+    <label>AUFGABE B2: <input type="text"></label>
+    <label>AUFGABE C1: <input type="text"></label>
+    <label>AUFGABE C2: <input type="text"></label>
+
+    <button class="button">Erstellen</button>
+  </div>
+
 </body>
 
 <?php include '../includes/footer.php'; ?>

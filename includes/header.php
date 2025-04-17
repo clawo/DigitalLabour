@@ -97,8 +97,8 @@
   <!-- Navigation (zentriert) -->
   <div class="nav">
     <a href="#">Suchen</a>
-    <a href="#">Für Dozenten</a>
-    <a href="#">Für Studenten</a>
+    <a href="#">Für Dozierende</a>
+    <a href="#">Für Studierende</a>
   </div>
 
   <!-- Login-Button (rechts) -->
