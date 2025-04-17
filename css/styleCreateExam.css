@@ -1,46 +1,60 @@
-.label {
-    font-weight: bold;
-    margin-top: 20px;
+*{
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 40px;
+    display: flex;
+    gap: 40px;
+    background-color: #fff;
+  }
+
+  .left, .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 
   .tag {
-    background-color: #2b6dad;
+    background-color: #125D95;
     color: white;
     border-radius: 20px;
     padding: 10px 20px;
     display: inline-block;
-    margin-bottom: 10px;
+    width: fit-content;
+    font-weight: bold;
   }
 
   .box {
-    background-color: #2b6dad;
-    color: white;
-    padding: 30px;
-    border-radius: 20px;
-    width: 100%;
+    background-color: #125D95;
     height: 150px;
-    margin-bottom: 20px;
+    border-radius: 20px;
+    color: white;
+    padding: 20px;
   }
 
-  .column {
-    width: 48%;
+  .section-title {
+    font-weight: bold;
+  }
+
+  .checkbox-group, .format-group {
     display: flex;
     flex-direction: column;
+    gap: 5px;
   }
 
-  .checkbox-group {
-    margin-bottom: 20px;
-  }
-
-  .checkbox-group label {
-    display: block;
-    margin: 5px 0;
+  input[type="text"] {
+    padding: 4px;
+    margin-top: 5px;
+    width: 200px;
   }
 
   table {
     border-collapse: collapse;
     width: 100%;
-    margin: 10px 0;
   }
 
   table, th, td {
@@ -48,34 +62,32 @@
   }
 
   th, td {
-    padding: 5px;
+    padding: 6px;
     text-align: left;
   }
 
-  input[type="text"] {
-    width: 100%;
-    padding: 5px;
-    margin: 5px 0;
-  }
-
-  .button {
-    background-color: #2b6dad;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 15px 40px;
-    font-size: 16px;
-    margin-top: 20px;
-    align-self: flex-end;
-    cursor: pointer;
-  }
-
   .input-line {
-    margin: 5px 0;
     display: flex;
+    align-items: center;
     gap: 10px;
   }
 
-  .input-line input {
-    flex: 1;
+  .right input[type="text"] {
+    width: 100%;
+  }
+
+  .criteria input {
+    width: 100%;
+  }
+
+  .button {
+    background-color: #125D95;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-top: auto;
   }

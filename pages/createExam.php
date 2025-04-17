@@ -9,36 +9,36 @@
 <?php include '../includes/header.php'; ?>
 
 <body>
-<div class="column">
+<div class="left">
     <div class="tag">MODUL: 1</div>
     <div class="tag">TITEL: MOCK EXAM</div>
 
-    <div class="label">1. LERNZIELE / KOMPETENZEN</div>
+    <div class="section-title">1. LERNZIELE / KOMPETENZEN</div>
     <div class="box"></div>
 
-    <div class="label">2. PRÜFUNGSFORM:</div>
+    <div class="section-title">2. PRÜFUNGSFORM:</div>
     <div class="checkbox-group">
       <label>(X) SCHRIFTLICH</label>
       <label>() MÜNDLICH</label>
       <label>() DIGITAL</label>
-      <label>() ANDERE: <input type="text" /></label>
+      <div class="input-line">() ANDERE: <input type="text" /></div>
     </div>
 
-    <div class="label">FORMAT:</div>
-    <div class="checkbox-group">
+    <div class="section-title">FORMAT:</div>
+    <div class="format-group">
       <label>(X) OFFENE FRAGEN</label>
       <label>() MULTIPLE CHOICE</label>
       <label>() LÜCKENTEXT</label>
       <label>() FALLANALYSE</label>
-      <label>() ANDERE: <input type="text" /></label>
+      <div class="input-line">() ANDERE: <input type="text" /></div>
     </div>
   </div>
 
-  <div class="column">
-    <div class="label">3. ANZAHL DER FRAGEN:</div>
-    <input type="text">
+  <div class="right">
+    <div class="section-title">3. ANZAHL DER FRAGEN:</div>
+    <input type="text" />
 
-    <div class="label">4. AUFGABENÜBERSICHT</div>
+    <div class="section-title">4. AUFGABENÜBERSICHT</div>
     <table>
       <tr>
         <th>AUFGABE:</th>
@@ -54,16 +54,19 @@
       <tr><td>C2</td><td></td><td></td><td></td></tr>
     </table>
 
-    <div class="label">5. ERWARTUNGSHORIZONT / BEWERTUNGSKRITERIEN:</div>
-    <label>AUFGABE A1: <input type="text"></label>
-    <label>AUFGABE A2: <input type="text"></label>
-    <label>AUFGABE B1: <input type="text"></label>
-    <label>AUFGABE B2: <input type="text"></label>
-    <label>AUFGABE C1: <input type="text"></label>
-    <label>AUFGABE C2: <input type="text"></label>
+    <div class="section-title">5. ERWARTUNGSHORIZONT / BEWERTUNGSKRITERIEN:</div>
+    <div class="criteria">
+      <label>AUFGABE A1: <input type="text" /></label>
+      <label>AUFGABE A2: <input type="text" /></label>
+      <label>AUFGABE B1: <input type="text" /></label>
+      <label>AUFGABE B2: <input type="text" /></label>
+      <label>AUFGABE C1: <input type="text" /></label>
+      <label>AUFGABE C2: <input type="text" /></label>
+    </div>
 
     <button class="button">Erstellen</button>
   </div>
+
 
 </body>
 
