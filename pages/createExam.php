@@ -32,15 +32,17 @@
 </div>
 
 
-      <div class="section-title">FORMAT:</div>
-      <div class="format-group">
-        <label>(X) OFFENE FRAGEN</label>
-        <label>() MULTIPLE CHOICE</label>
-        <label>() LÜCKENTEXT</label>
-        <label>() FALLANALYSE</label>
-        <label class="input-line"><input type="checkbox"> ANDERE:<input type="text" /></label>
-      </div>
-    </div>
+<div class="section-title">FORMAT:</div>
+<div class="format-group">
+  <label><input type="checkbox" checked> OFFENE FRAGEN</label>
+  <label><input type="checkbox"> MULTIPLE CHOICE</label>
+  <label><input type="checkbox"> LÜCKENTEXT</label>
+  <label><input type="checkbox"> FALLANALYSE</label>
+  <label class="input-line">
+    <input type="checkbox"> ANDERE:
+    <input type="text" />
+  </label>
+</div>
 
     <!-- Rechte Seite -->
     <div class="right">
