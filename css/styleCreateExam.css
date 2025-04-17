@@ -1,93 +1,95 @@
-*{
-    box-sizing: border-box;
-  }
+* {
+  box-sizing: border-box;
+}
 
-  body {
-    font-family: 'Bebas Neue', sans-serif;
-    margin: 0;
-    padding: 40px;
-    display: flex;
-    gap: 40px;
-    background-color: #fff;
-  }
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 40px;
+  background-color: #fff;
+}
 
-  .left, .right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
 
-  .tag {
-    background-color: #125D95;
-    color: white;
-    border-radius: 20px;
-    padding: 10px 20px;
-    display: inline-block;
-    width: fit-content;
-    font-weight: bold;
-  }
+.left, .right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-  .box {
-    background-color: #125D95;
-    height: 150px;
-    border-radius: 20px;
-    color: white;
-    padding: 20px;
-  }
+.tag {
+  background-color: #125D95;
+  color: white;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-weight: bold;
+  width: fit-content;
+}
 
-  .section-title {
-    font-weight: bold;
-  }
+.box {
+  background-color: #125D95;
+  height: 150px;
+  border-radius: 20px;
+  color: white;
+  padding: 20px;
+}
 
-  .checkbox-group, .format-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
+.section-title {
+  font-weight: bold;
+}
 
-  input[type="text"] {
-    padding: 4px;
-    margin-top: 5px;
-    width: 200px;
-  }
+.checkbox-group label,
+.format-group label {
+  margin: 4px 0;
+}
 
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
+input[type="text"] {
+  padding: 4px;
+  margin-top: 5px;
+  width: 200px;
+}
 
-  table, th, td {
-    border: 1px solid black;
-  }
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 
-  th, td {
-    padding: 6px;
-    text-align: left;
-  }
+table, th, td {
+  border: 1px solid black;
+}
 
-  .input-line {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+th, td {
+  padding: 6px;
+  text-align: left;
+}
 
-  .right input[type="text"] {
-    width: 100%;
-  }
+.criteria input {
+  width: 100%;
+  margin-top: 4px;
+}
 
-  .criteria input {
-    width: 100%;
-  }
+.button {
+  background-color: #125D95;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 12px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-top: auto;
+}
 
-  .button {
-    background-color: #125D95;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 12px 30px;
-    font-size: 16px;
-    cursor: pointer;
-    align-self: flex-end;
-    margin-top: auto;
-  }
+.input-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-line input {
+  flex: 1;
+}
