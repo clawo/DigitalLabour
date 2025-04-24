@@ -2,7 +2,6 @@
 session_start();
 require_once '../includes/htmlHead.php';
 require_once '../includes/header.php';
-require_once '../db_connect.php';
 require_once '../DatabaseController.php';
 
 function handleRegister(): ?string {
@@ -52,7 +51,7 @@ function handleRegister(): ?string {
 $errorMessage = handleRegister();
 ?>
 
-<main class="register-container">
+<div class="register-container">
   <h1 class="register-title">REGISTRIEREN</h1>
 
   <?php if ($errorMessage): ?>
@@ -78,6 +77,6 @@ $errorMessage = handleRegister();
     <button onclick="handleRegister()" type="submit" class="register-btn">Registrieren</button>
 
   </form>
-</main>
+</div>
 
 <?php include '../includes/footer.php'; ?>
