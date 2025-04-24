@@ -27,6 +27,8 @@
 
   </form>
 </main>
+
+<?php include '../includes/footer.php'; ?>
 <?php
 session_start();
 require_once '../includes/htmlHead.php';
@@ -80,4 +82,3 @@ function handleRegister(): ?string {
 
 $errorMessage = handleRegister();
 ?>
-<?php include '../includes/footer.php'; ?>
