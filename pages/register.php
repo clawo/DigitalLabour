@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<?php
+session_start();
+require_once '../includes/htmlHead.php';
+require_once '../includes/header.php';
+require_once '../db_connect.php';
+require_once '../db_controller.php';
+$database_controller = new DatabaseController();
+$errorMessage = $database_controller->handleRegister();
+?>
+
 
 <main class="register-container">
     <h1 class="register-title">REGISTRIEREN</h1>
@@ -26,14 +37,6 @@
 
     </form>
 </main>
-<?php
-session_start();
-require_once '../includes/htmlHead.php';
-require_once '../includes/header.php';
-require_once '../db_connect.php';
-require_once '../db_controller.php';
-$database_controller = new DatabaseController();
-$errorMessage = $database_controller->handleRegister();
-?>
+
 
 <?php include '../includes/footer.php'; ?>
