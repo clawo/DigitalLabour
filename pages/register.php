@@ -1,16 +1,12 @@
 <?php
 session_start();
-require_once '../includes/htmlHead.php';
-require_once '../includes/header.php';
 require_once '../DatabaseController.php';
 
 function handleRegister(): ?string {
     echo '<script>console.log("Handling registration...");</script>';
-   /* if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         return null;
     }
-*/
 
     $roleInput   = $_POST['rolle'] ?? '';
     $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
@@ -53,32 +49,44 @@ function handleRegister(): ?string {
 $errorMessage = handleRegister();
 ?>
 
-<div class="register-container">
-  <h1 class="register-title">REGISTRIEREN</h1>
+<!DOCTYPE html>
+<html lang="de">
 
-  <?php if ($errorMessage): ?>
-    <p class="error-message"><?= htmlspecialchars($errorMessage) ?></p>
-  <?php endif; ?>
+<head>
+    <?php include '../includes/htmlHead.php'; ?>
+</head>
 
-  <form class="register-form" method="post" action="">
-    <select name="rolle" required>
-      <option value="" disabled selected>Ich bin...</option>
-      <option value="student">Student*in</option>
-      <option value="dozent">Dozent*in</option>
-    </select>
+<?php include '../includes/header.php'; ?>
 
-    <input type="text" name="vorname" placeholder="Vorname" required>
-    <input type="text" name="nachname" placeholder="Nachname" required>
-    <input type="email" name="email" placeholder="Email Adresse" required>
-    <input type="password" name="password" placeholder="Passwort" required>
+<body>
+    <div class="register-container">
+      <h1 class="register-title">REGISTRIEREN</h1>
 
-    <p class="login-hint">
-      Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
-    </p>
+      <?php if ($errorMessage): ?>
+        <p class="error-message"><?= htmlspecialchars($errorMessage) ?></p>
+      <?php endif; ?>
 
-    <button onclick="handleRegister()" type="submit" class="register-btn">Registrieren</button>
+      <form class="register-form" method="post" action="">
+        <select name="rolle" required>
+          <option value="" disabled selected>Ich bin...</option>
+          <option value="student">Student*in</option>
+          <option value="dozent">Dozent*in</option>
+        </select>
 
-  </form>
-</div>
+        <input type="text" name="vorname" placeholder="Vorname" required>
+        <input type="text" name="nachname" placeholder="Nachname" required>
+        <input type="email" name="email" placeholder="Email Adresse" required>
+        <input type="password" name="password" placeholder="Passwort" required>
+
+        <p class="login-hint">
+          Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
+        </p>
+
+        <button onclick="handleRegister()" type="submit" class="register-btn">Registrieren</button>
+
+      </form>
+    </div>
+</body>
 
 <?php include '../includes/footer.php'; ?>
+</html>
