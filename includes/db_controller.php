@@ -29,8 +29,10 @@
 
         public function registerUser($data) {
             // check if username or email already exists
+            echo '<script>console.log("Checking if username or email already exists.");</script>';
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$data['username'], $data['email']]);
+            echo '<script>console.log("Executing query to check for existing username or email.");</script>';
             if ($stmt->fetchColumn() > 0) {
                 echo '<script>console.log("Username or email already exists.");</script>';
                 return ['success' => false, 'message' => 'Username oder Email existiert bereits.'];

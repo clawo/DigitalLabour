@@ -37,6 +37,7 @@ require_once '../db_connect.php';
 require_once '../DatabaseController.php';
 
 function handleRegister(): ?string {
+    echo '<script>console.log("Handling registration...");</script>';
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         return null;
     }
@@ -62,6 +63,7 @@ function handleRegister(): ?string {
         'password'   => $password
     ];
 
+    echo '<script>console.log("Data to be inserted: ' . json_encode($data) . '");</script>';
     $result = $controller->registerUser($data);
 
     if ($result['success']) {
