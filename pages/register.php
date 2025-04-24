@@ -7,8 +7,6 @@
     <p class="error-message"><?= htmlspecialchars($errorMessage) ?></p>
   <?php endif; 
   session_start();
-  require_once '../includes/htmlHead.php';
-  require_once '../includes/header.php';
   require_once '../db_connect.php';
   require_once '../DatabaseController.php';
   
@@ -55,7 +53,6 @@
   
       return $result['message'] ?? 'Registrierung fehlgeschlagen.';
   }
-  
   $errorMessage = handleRegister();?>
 
   <form class="register-form" method="post" action="">
@@ -80,6 +77,3 @@
 </main>
 
 <?php include '../includes/footer.php'; ?>
-<?php
-
-?>
