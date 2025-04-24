@@ -1,3 +1,27 @@
+
+<!-- ==========================
+     Login-Bereich
+     ========================== -->
+<main class="login-container">
+  <h1 class="login-title">LOGIN</h1>
+
+  <?php if (!empty($errorMessage)): ?>
+    <p class="error-message"><?= htmlspecialchars($errorMessage) ?></p>
+  <?php endif; ?>
+
+  <form class="login-form" method="post" action="">
+    <input type="email" name="email" placeholder="Email Adresse" required>
+    <input type="password" name="password" placeholder="Passwort" required>
+
+    <p class="register-hint">
+      Noch keinen Account? <a href="register.php">Jetzt registrieren!</a>
+    </p>
+
+    <button type="submit" class="login-btn">Login</button>
+  </form>
+</main>
+
+<?php include '../includes/footer.php'; ?>
 <?php
 // login.php
 // Login-Logik und HTML in einer Datei
@@ -37,27 +61,3 @@ $errorMessage = handleLogin();
 
 <?php include '../includes/htmlHead.php'; ?>
 <?php include '../includes/header.php'; ?>
-
-<!-- ==========================
-     Login-Bereich
-     ========================== -->
-<main class="login-container">
-  <h1 class="login-title">LOGIN</h1>
-
-  <?php if (!empty($errorMessage)): ?>
-    <p class="error-message"><?= htmlspecialchars($errorMessage) ?></p>
-  <?php endif; ?>
-
-  <form class="login-form" method="post" action="">
-    <input type="email" name="email" placeholder="Email Adresse" required>
-    <input type="password" name="password" placeholder="Passwort" required>
-
-    <p class="register-hint">
-      Noch keinen Account? <a href="register.php">Jetzt registrieren!</a>
-    </p>
-
-    <button type="submit" class="login-btn">Login</button>
-  </form>
-</main>
-
-<?php include '../includes/footer.php'; ?>
