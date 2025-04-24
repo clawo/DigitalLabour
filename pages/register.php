@@ -2,7 +2,6 @@
 session_start();
 
 require_once __DIR__ . '/../includes/htmlHead.php';
-require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../db_connect.php';
 require_once __DIR__ . '/../db_controller.php';
 
@@ -15,6 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {             // nur verarbeiten,
     $errorMessage = $database_controller->handleRegister($database_controller);
 }
 ?>
+<body>
+<header>
+    require_once __DIR__ . '/../includes/header.php';
+</header>
 <main class="register-container">
     <h1 class="register-title">REGISTRIEREN</h1>
 
@@ -44,5 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {             // nur verarbeiten,
         <button type="submit" class="register-btn">Registrieren</button>
     </form>
 </main>
+</body>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
