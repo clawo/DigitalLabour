@@ -5,7 +5,7 @@ require_once '../includes/header.php';
 require_once '../db_connect.php';
 require_once '../db_controller.php';
 $database_controller = new DatabaseController();
-$errorMessage = $database_controller->handleRegister();
+$errorMessage = $database_controller->handleRegister($database_controller);
 ?>
 
 <main class="register-container">
@@ -31,7 +31,7 @@ $errorMessage = $database_controller->handleRegister();
             Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
         </p>
 
-        <button  onclick="handleRegister()?>" type="submit" class="register-btn">Registrieren</button>
+        <button  onclick="handleRegister()" type="submit" class="register-btn">Registrieren</button>
 
     </form>
 </main>

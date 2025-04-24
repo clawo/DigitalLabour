@@ -11,10 +11,9 @@
         }
         public function handleRegister(): ?string {
             echo '<script>console.log("Handling registration...");</script>';
-            /* if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                  return null;
              }
-         */
             $roleInput   = $_POST['rolle'] ?? '';
             $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
             $firstName   = trim($_POST['vorname'] ?? '');
@@ -25,8 +24,7 @@
             if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
                 return 'Bitte alle Pflichtfelder ausfüllen.';
             }
-        
-            $controller = new DatabaseController();
+    
             $data = [
                 'username'   => $email, // Username hier als E-Mail
                 'email'      => $email,
