@@ -6,6 +6,7 @@
         private $pdo;
 
         public function __construct() {
+            echo '<script>console.log("Initializing DatabaseController...");</script>';
             $this->pdo = getDB();
         }
 
