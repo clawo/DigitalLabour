@@ -62,6 +62,7 @@ function handleRegister(): ?string {
         'password'   => $password
     ];
 
+    echo '<script>console.log("Data to be inserted: ' . json_encode($data) . '");</script>';
     $result = $controller->registerUser($data);
 
     if ($result['success']) {
