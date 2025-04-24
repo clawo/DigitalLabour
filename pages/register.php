@@ -37,3 +37,55 @@ include '../includes/header.php';
 </main>
 
 <?php include '../includes/footer.php'; ?>
+<?php
+function handleRegister(): ?string {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        return null;
+    }
+
+    $username    = trim($_POST['username'] ?? '');
+    $email       = trim($_POST['email'] ?? '');
+    $firstName   = trim($_POST['first_name'] ?? '');
+    $lastName    = trim($_POST['last_name'] ?? '');
+    $password    = $_POST['password'] ?? '';
+    $confirmPass = $_POST['confirm_password'] ?? '';
+    $roleId      = intval($_POST['role_id'] ?? 2); // Standardrolle 2
+
+    if (empty($username) || empty($email) || empty($password) || empty($confirmPass)) {
+        return 'Bitte alle Pflichtfelder ausfüllen.';
+    }
+    if ($password !== $confirmPass) {
+        return 'Passwörter stimmen nicht überein.';
+    }
+
+    $controller = new DatabaseController();
+    $data = [
+        'username'   => $username,
+        'email'      => $email,
+        'first_name' => $firstName,
+        'last_name'  => $lastName,
+        'role_id'    => $roleId,
+        'password'   => $password
+    ];
+    $result = $controller->registerUser($data);
+
+    if ($result['success']) {
+        // Direktes Einloggen nach erfolgreicher Registrierung
+        $_SESSION['user'] = [
+            'user_id'  => $result['user_id'],
+            'username' => $username,
+            'role_id'  => $roleId,
+            'email'    => $email,
+        ];
+        header('Location: welcome.php');
+        exit;
+    }
+
+    return $result['message'] ?? 'Registrierung fehlgeschlagen.';
+}
+
+$errorMessage = handleRegister();
+
+// In register_form.php anzeigen:
+// <?= htmlspecialchars($errorMessage) ?>
+?>
