@@ -32,18 +32,24 @@
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$data['username'], $data['email']]);
             if ($stmt->fetchColumn() > 0) {
+                echo '<script>console.log("Username or email already exists.");</script>';
                 return ['success' => false, 'message' => 'Username oder Email existiert bereits.'];
             }
+
+            echo '<script>console.log("Username and email are unique.");</script>';
+            echo '<script>console.log("Data: ' . json_encode($data) . '");</script>';
         
             // hash password and insert new user
             $stmt = $this->pdo->prepare("
                 INSERT INTO users (username, email, first_name, last_name, role_id, password)
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
+            echo '<script>console.log("Inserting new user into database.");</script>';
             $stmt->execute([
                 $data['username'], $data['email'], $data['first_name'], $data['last_name'],
                 $data['role_id'], password_hash($data['password'], PASSWORD_DEFAULT)
             ]);
+            echo '<script>console.log("User inserted successfully.");</script>';
         
             return ['success' => true, 'user_id' => $this->pdo->lastInsertId()];
         }        
