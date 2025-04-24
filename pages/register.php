@@ -18,6 +18,14 @@ require_once '../DatabaseController.php';
       <option value="student">Student*in</option>
       <option value="dozent">Dozent*in</option>
     </select>
+    <input type="text" name="vorname" placeholder="Vorname" required>
+    <input type="text" name="nachname" placeholder="Nachname" required>
+    <input type="email" name="email" placeholder="Email Adresse" required>
+    <input type="password" name="password" placeholder="Passwort" required>
+
+    <p class="login-hint">
+      Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
+    </p>
     <?php
     session_start();
       function handleRegister(): ?string {
@@ -67,15 +75,6 @@ require_once '../DatabaseController.php';
       }
 
       $errorMessage = handleRegister();?>
-    <input type="text" name="vorname" placeholder="Vorname" required>
-    <input type="text" name="nachname" placeholder="Nachname" required>
-    <input type="email" name="email" placeholder="Email Adresse" required>
-    <input type="password" name="password" placeholder="Passwort" required>
-
-    <p class="login-hint">
-      Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
-    </p>
-
     <button onclick="handleRegister()" type="submit" class="register-btn">Registrieren</button>
 
   </form>
