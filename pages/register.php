@@ -23,7 +23,7 @@
       Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
     </p>
 
-    <button onclick="<?php handleRegister()?>" class="register-btn">Registrieren</button>
+    <button onclick="handleRegister()" class="register-btn">Registrieren</button>
 
   </form>
 </main>
