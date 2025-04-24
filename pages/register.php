@@ -1,52 +1,4 @@
 <?php
-session_start();
-function handleRegister(): ?string {
-    echo '<script>console.log("Handling registration...");</script>';
-   /* if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        return null;
-    }
-*/
-
-    $roleInput   = $_POST['rolle'] ?? '';
-    $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
-    $firstName   = trim($_POST['vorname'] ?? '');
-    $lastName    = trim($_POST['nachname'] ?? '');
-    $email       = trim($_POST['email'] ?? '');
-    $password    = $_POST['password'] ?? '';
-
-    if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
-        return 'Bitte alle Pflichtfelder ausfüllen.';
-    }
-
-    $controller = new DatabaseController();
-    $data = [
-        'username'   => $email, // Username hier als E-Mail
-        'email'      => $email,
-        'first_name' => $firstName,
-        'last_name'  => $lastName,
-        'role_id'    => $roleId,
-        'password'   => $password
-    ];
-
-    echo '<script>console.log("Data to be inserted: ' . json_encode($data) . '");</script>';
-    $result = $controller->registerUser($data);
-
-    if ($result['success']) {
-        $_SESSION['user'] = [
-            'user_id'  => $result['user_id'],
-            'username' => $email,
-            'role_id'  => $roleId,
-            'email'    => $email,
-        ];
-        header('Location: welcome.php');
-        exit;
-    }
-
-    return $result['message'] ?? 'Registrierung fehlgeschlagen.';
-}
-
-$errorMessage = handleRegister();
 require_once '../includes/htmlHead.php';
 require_once '../includes/header.php';
 require_once '../DatabaseController.php';
@@ -66,7 +18,55 @@ require_once '../DatabaseController.php';
       <option value="student">Student*in</option>
       <option value="dozent">Dozent*in</option>
     </select>
+    <?php
+    session_start();
+      function handleRegister(): ?string {
+          echo '<script>console.log("Handling registration...");</script>';
+        /* if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+          if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+              return null;
+          }
+      */
 
+          $roleInput   = $_POST['rolle'] ?? '';
+          $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
+          $firstName   = trim($_POST['vorname'] ?? '');
+          $lastName    = trim($_POST['nachname'] ?? '');
+          $email       = trim($_POST['email'] ?? '');
+          $password    = $_POST['password'] ?? '';
+
+          if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
+              return 'Bitte alle Pflichtfelder ausfüllen.';
+          }
+
+          $controller = new DatabaseController();
+          $data = [
+              'username'   => $email, // Username hier als E-Mail
+              'email'      => $email,
+              'first_name' => $firstName,
+              'last_name'  => $lastName,
+              'role_id'    => $roleId,
+              'password'   => $password
+          ];
+
+          echo '<script>console.log("Data to be inserted: ' . json_encode($data) . '");</script>';
+          $result = $controller->registerUser($data);
+
+          if ($result['success']) {
+              $_SESSION['user'] = [
+                  'user_id'  => $result['user_id'],
+                  'username' => $email,
+                  'role_id'  => $roleId,
+                  'email'    => $email,
+              ];
+              header('Location: welcome.php');
+              exit;
+          }
+
+          return $result['message'] ?? 'Registrierung fehlgeschlagen.';
+      }
+
+      $errorMessage = handleRegister();?>
     <input type="text" name="vorname" placeholder="Vorname" required>
     <input type="text" name="nachname" placeholder="Nachname" required>
     <input type="email" name="email" placeholder="Email Adresse" required>
