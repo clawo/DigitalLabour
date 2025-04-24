@@ -17,7 +17,7 @@
         
             $stmt = $this->pdo->prepare("
                 SELECT r.role_name
-                FROM user u
+                FROM users u
                 JOIN roles r ON u.role_id = r.role_id
                 WHERE u.user_id = ?
             ");
@@ -29,7 +29,7 @@
 
         public function registerUser($data) {
             // check if username or email already exists
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM user WHERE username = ? OR email = ?");
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$data['username'], $data['email']]);
             if ($stmt->fetchColumn() > 0) {
                 return ['success' => false, 'message' => 'Username oder Email existiert bereits.'];
@@ -37,7 +37,7 @@
         
             // hash password and insert new user
             $stmt = $this->pdo->prepare("
-                INSERT INTO user (username, email, first_name, last_name, role_id, password)
+                INSERT INTO users (username, email, first_name, last_name, role_id, password)
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
@@ -50,7 +50,7 @@
 
         public function loginUser($usernameOrEmail, $password) {
             $stmt = $this->pdo->prepare("
-                SELECT * FROM user
+                SELECT * FROM users
                 WHERE username = ? OR email = ?
             ");
             $stmt->execute([$usernameOrEmail, $usernameOrEmail]);
@@ -66,7 +66,7 @@
 
         public function changePassword($userId, $newPassword) {
             $stmt = $this->pdo->prepare("
-                UPDATE user SET password = ?
+                UPDATE users SET password = ?
                 WHERE user_id = ?
             ");
             return $stmt->execute([
@@ -78,14 +78,14 @@
 
         // ===== USERS =====
         public function getAllUsers() {
-            $stmt = $this->pdo->query("SELECT user_id, username, email, first_name, last_name, role_id FROM user");
+            $stmt = $this->pdo->query("SELECT user_id, username, email, first_name, last_name, role_id FROM users");
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function getUsersByRole($roleId) {
             $stmt = $this->pdo->prepare("
                 SELECT u.user_id, u.username, u.email, u.first_name, u.last_name, r.role_name, r.role_label
-                FROM user u
+                FROM users u
                 JOIN roles r ON u.role_id = r.role_id
                 WHERE u.role_id = ?
             ");
@@ -94,20 +94,20 @@
         }
         
         public function getUserById($userId) {
-            $stmt = $this->pdo->prepare("SELECT * FROM user WHERE user_id = ?");
+            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE user_id = ?");
             $stmt->execute([$userId]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
         public function getUserByUsername($username) {
-            $stmt = $this->pdo->prepare("SELECT * FROM user WHERE username = ?");
+            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute([$username]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }        
 
         public function createUser($data) {
             $stmt = $this->pdo->prepare("
-                INSERT INTO user (username, email, first_name, last_name, role_id, password)
+                INSERT INTO users (username, email, first_name, last_name, role_id, password)
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
@@ -119,7 +119,7 @@
 
         public function updateUser($userId, $data) {
             $stmt = $this->pdo->prepare("
-                UPDATE user SET username = ?, email = ?, first_name = ?, last_name = ?, role_id = ?
+                UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, role_id = ?
                 WHERE user_id = ?
             ");
             return $stmt->execute([
@@ -129,7 +129,7 @@
         }
 
         public function deleteUser($userId) {
-            $stmt = $this->pdo->prepare("DELETE FROM user WHERE user_id = ?");
+            $stmt = $this->pdo->prepare("DELETE FROM users WHERE user_id = ?");
             return $stmt->execute([$userId]);
         }
 
@@ -311,7 +311,7 @@
         public function getAverageGradePerUser() {
             return $this->pdo->query("
                 SELECT u.user_id, u.username, AVG(me.grade) as avg_grade
-                FROM user u
+                FROM users u
                 JOIN mock_exams me ON u.user_id = me.user_id
                 GROUP BY u.user_id
             ")->fetchAll(PDO::FETCH_ASSOC);
