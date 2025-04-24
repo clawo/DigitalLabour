@@ -96,10 +96,9 @@
 
   <!-- Navigation (zentriert) -->
   <div class="nav">
-    <a href="../pages/dozenten.php">Suchen</a>
-    <button type="button" onclick="window.location.href='../pages/dozenten.php'">
-  Für Dozenten
-</button>    <a href="#">Für Studenten</a>
+    <a href="../index.php">Suchen</a>
+    <a href="../pages/dozenten.php">Für Dozenten</a>
+    <a href="../pages/studenten.php">Für Studenten</a>
   </div>
 
   <!-- Login-Button (rechts) -->
