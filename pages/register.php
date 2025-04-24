@@ -1,9 +1,5 @@
 <?php
 session_start();
-require_once '../includes/htmlHead.php';
-require_once '../includes/header.php';
-require_once '../DatabaseController.php';
-
 function handleRegister(): ?string {
     echo '<script>console.log("Handling registration...");</script>';
    /* if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -51,8 +47,12 @@ function handleRegister(): ?string {
 }
 
 $errorMessage = handleRegister();
-?>
+require_once '../includes/htmlHead.php';
+require_once '../includes/header.php';
+require_once '../DatabaseController.php';
 
+
+?>
 <div class="register-container">
   <h1 class="register-title">REGISTRIEREN</h1>
 
