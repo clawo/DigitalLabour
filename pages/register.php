@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {             // nur verarbeiten,
 ?>
 <body>
 <header>
-    require_once __DIR__ . '/../includes/header.php';
+    <?php require_once __DIR__ . '/../includes/header.php'; ?>
 </header>
 <main class="register-container">
     <h1 class="register-title">REGISTRIEREN</h1>
