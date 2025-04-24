@@ -1,11 +1,12 @@
 <?php
 session_start();
+require_once '../includes/htmlHead.php';
+require_once '../includes/header.php';
 require_once '../db_connect.php';
 require_once '../db_controller.php';
 $database_controller = new DatabaseController();
 $errorMessage = $database_controller->handleRegister();
 ?>
-
 
 <main class="register-container">
     <h1 class="register-title">REGISTRIEREN</h1>
@@ -30,13 +31,9 @@ $errorMessage = $database_controller->handleRegister();
             Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
         </p>
 
-        <button  onclick="handleRegister()" type="submit" class="register-btn">Registrieren</button>
+        <button  onclick="handleRegister()?>" type="submit" class="register-btn">Registrieren</button>
 
     </form>
 </main>
 
-
-<?php 
-require_once '../includes/htmlHead.php';
-require_once '../includes/header.php';
-include '../includes/footer.php'; ?>
+<?php include '../includes/footer.php'; ?>
