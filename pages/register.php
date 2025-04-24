@@ -38,10 +38,10 @@ require_once '../DatabaseController.php';
 
 function handleRegister(): ?string {
     echo '<script>console.log("Handling registration...");</script>';
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+   /* if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         return null;
     }
-
+*/
     $roleInput   = $_POST['rolle'] ?? '';
     $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
     $firstName   = trim($_POST['vorname'] ?? '');
