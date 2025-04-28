@@ -10,6 +10,7 @@
 
 <?php
 require_once '../includes/db_controller.php';
+require_once '../includes/gpt_evaluate.php';
 
 if (!isset($_SESSION['user'])) {
     echo '<script>window.location.href = "../index.php";</script>';
