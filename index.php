@@ -30,8 +30,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
             <form method="get" action="">
                 <label for="sort-select">Sortiere nach:</label>
                 <select id="sort-select" name="sortierung" onchange="this.form.submit()">
-                    <option value="anzahl_fragen" <?= ($sortierung == 'anzahl_fragen') ? 'selected' : '' ?>>Anzahl der Fragen</option>
-                    <option value="semester" <?= ($sortierung == 'semester') ? 'selected' : '' ?>>Semester</option>
                     <option value="name" <?= ($sortierung == 'name') ? 'selected' : '' ?>>Alphabetisch</option>
                 </select>
             </form>

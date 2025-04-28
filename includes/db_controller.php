@@ -168,8 +168,6 @@
 
         public function getModulesFiltered($sortierung = 'name', $suche = '') {
             $allowedSortFields = [
-                'anzahl_fragen' => 'anzahl_fragen',
-                'semester' => 'semester',
                 'name' => 'module_name'
             ];
 
