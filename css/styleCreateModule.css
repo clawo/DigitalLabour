@@ -75,7 +75,7 @@ body {
   }
 
   .editor input, .editor textarea {
-    width: 100%;
+    width: 90%;
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid black;
