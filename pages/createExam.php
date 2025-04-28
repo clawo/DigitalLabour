@@ -55,26 +55,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="body-wrapper">
-    <div class="container">
-        <div class="left">
-            <div class="tag">MODUL: <?= htmlspecialchars($module['module_name']) ?></div>
-            <div class="tag">LABEL: <?= htmlspecialchars($module['module_label']) ?></div>
-        </div>
+<body>
+    <div class="body-wrapper">
+        <div class="container">
+            <div class="left">
+                <div class="tag">MODUL: <?= htmlspecialchars($module['module_name']) ?></div>
+                <div class="tag">LABEL: <?= htmlspecialchars($module['module_label']) ?></div>
+            </div>
 
-        <div class="right">
-            <form method="post" action="">
-                <div class="section-title">3. ANZAHL DER FRAGEN:</div>
-                <input type="number" class="input-field" id="questionCount" name="questionCount"
-                       value="1" min="1" max="<?= (int)$questionCountAvailable ?>" required>
+            <div class="right">
+                <form method="post" action="">
+                    <div class="section-title">3. ANZAHL DER FRAGEN:</div>
+                    <input type="number" class="input-field" id="questionCount" name="questionCount"
+                           value="1" min="1" max="<?= (int)$questionCountAvailable ?>" required>
 
-                <button type="submit" class="button">Erstellen</button>
-            </form>
+                    <button type="submit" class="button">Erstellen</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</body>
 
 <?php include '../includes/footer.php'; ?>
-</body>
 
 </html>
