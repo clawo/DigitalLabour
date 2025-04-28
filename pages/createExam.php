@@ -21,7 +21,7 @@ if (!isset($_SESSION['user'])) {
 }
 
 # load module information with id from URL
-$moduleId = $_GET['id'] ?? null;
+$moduleId = $_GET['module_id'] ?? null;
 if ($moduleId) {
     $module = $db_controller->getModuleById($moduleId);
     if (!$module) {
