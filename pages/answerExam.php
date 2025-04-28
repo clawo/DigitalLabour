@@ -38,39 +38,48 @@ if (empty($mockQuestions)) {
     echo '<script>alert("Keine Fragen für diese Prüfung gefunden."); window.location.href="../index.php";</script>';
     exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
+    foreach ($_POST['antworten'] as $questionId => $answer) {
+        $questionId = (int)$questionId;
+        $answer = trim($answer);
+
+        $db_controller->updateMockAnswer($examId, $questionId, $answer);
+    }
+
+    echo '<script>window.location.href = "viewExam.php?exam_id=' . $examId . '";</script>';
+    exit;
+}
 ?>
 
 <body>
-<div class="body-wrapper">
-    <div class="container">
-        <div class="left">
-            <div class="tag">PRÜFUNG: Mock Exam #<?= htmlspecialchars($examId) ?></div>
-            <div class="tag">Fragenanzahl: <?= count($mockQuestions) ?></div>
-        </div>
+<div class="contentBody">
+    <h1>PRÜFUNG: Mock Exam #<?= htmlspecialchars($examId) ?></h1>
+    <h2>Fragenanzahl: <?= count($mockQuestions) ?></h2>
+    <h2>Beantworte die Fragen:</h2>
 
-        <div class="right">
-            <form method="post" action="saveAnswers.php?exam_id=<?= htmlspecialchars($examId) ?>">
-                <div class="section-title">Beantworte die Fragen:</div>
-
-                <?php foreach ($mockQuestions as $index => $question): ?>
-                    <div class="section question">
-                        <h3>Frage <?= $index + 1 ?>:</h3>
-                        <p><?= htmlspecialchars($question['question']) ?></p>
-
-                        <label for="antwort_<?= (int)$question['question_id'] ?>">Antwort:</label><br>
-                        <textarea id="antwort_<?= (int)$question['question_id'] ?>"
-                                  name="antworten[<?= (int)$question['question_id'] ?>]"
-                                  rows="4" cols="60"
-                                  required></textarea>
-                    </div>
-                <?php endforeach; ?>
-
-                <div class="button-container">
-                    <button type="submit" class="button">Antworten speichern</button>
-                </div>
-            </form>
-        </div>
+    <div class="section">
+        <h2><strong>Teil A: Wissensfragen</strong></h2>
     </div>
+
+    <form method="post" action="">
+        <?php foreach ($mockQuestions as $index => $question): ?>
+            <div class="section question">
+                <h3>Frage <?= $index + 1 ?>:</h3>
+                <p><?= htmlspecialchars($question['question']) ?></p>
+
+                <label for="antwort_<?= (int)$question['question_id'] ?>">Antwort:</label><br>
+                <textarea id="antwort_<?= (int)$question['question_id'] ?>"
+                          name="antworten[<?= (int)$question['question_id'] ?>]"
+                          rows="4" cols="60"
+                          required></textarea>
+            </div>
+        <?php endforeach; ?>
+
+        <div class="button-container">
+            <button type="submit" class="button">Antworten speichern</button>
+        </div>
+    </form>
 </div>
 
 <?php include '../includes/footer.php'; ?>
