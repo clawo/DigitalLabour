@@ -11,12 +11,6 @@ $modules = [];
 $sortierung = $_GET['sortierung'] ?? 'name';
 $suche = $_GET['suche'] ?? '';
 
-// for debug purposes
-$_SESSION['user'] = [
-    'user_id' => 3,
-    'role_id' => 1,
-];
-
 if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
     $db_controller = new DatabaseController();
 
