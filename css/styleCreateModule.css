@@ -1,11 +1,11 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
     background-color: #f5f5f5;
   }
 
   .containerbody {
-    margin: 10%;
+    margin: 5%;
   }
 
   .search-bar {
@@ -93,12 +93,12 @@ body {
     padding: 10px 20px;
     font-size: 14px;
     border-radius: 20px;
-    border: 2px solid black;
+    border: 2px solid #1e2a38;
     cursor: pointer;
     background: white;
   }
 
   .editor-buttons button.save {
-    background: black;
+    background: #1e2a38;
     color: white;
   }
