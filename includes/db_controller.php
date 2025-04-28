@@ -236,7 +236,7 @@
         public function createMockExam($userId, $moduleId, $questions) {
             $stmt = $this->pdo->prepare("
                 INSERT INTO mock_exams (user_id, module_id)
-                VALUES (?, ?, ?)
+                VALUES (?, ?)
             ");
             $stmt->execute([$userId, $moduleId]);
 
