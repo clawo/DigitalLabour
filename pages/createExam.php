@@ -34,7 +34,6 @@ if (!$module) {
 $questionCountAvailable = $db_controller->getQuestionCountByModule($moduleId);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo '<script>console.log("POST-Daten: ' . htmlspecialchars(print_r($_POST, true)) . '");</script>';
     $questionCount = (int) ($_POST['questionCount'] ?? 1);
     if ($questionCount < 1) {
         $questionCount = 1;
