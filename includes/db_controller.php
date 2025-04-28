@@ -233,12 +233,12 @@
 
 
         // ===== MOCK EXAMS =====
-        public function createMockExam($userId, $moduleId, $questions) {
+        public function createMockExam($moduleId, $userId, $questions) {
             $stmt = $this->pdo->prepare("
-                INSERT INTO mock_exams (user_id, module_id)
+                INSERT INTO mock_exams (module_id, user_id)
                 VALUES (?, ?)
             ");
-            $stmt->execute([$userId, $moduleId]);
+            $stmt->execute([$moduleId, $userId]);
 
             $examId = $this->pdo->lastInsertId();
 

@@ -23,6 +23,7 @@ if (!$moduleId) {
     echo '<script>alert("Modul-ID nicht angegeben."); window.location.href = "../index.php";</script>';
     exit;
 }
+echo '<script>console.log("Module ID: ' . htmlspecialchars($moduleId) . '");</script>';
 
 $module = $db_controller->getModuleById($moduleId);
 if (!$module) {
@@ -33,16 +34,19 @@ if (!$module) {
 $questionCountAvailable = $db_controller->getQuestionCountByModule($moduleId);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    echo '<script>console.log("POST-Daten: ' . htmlspecialchars(print_r($_POST, true)) . '");</script>';
     $questionCount = (int) ($_POST['questionCount'] ?? 1);
     if ($questionCount < 1) {
         $questionCount = 1;
     }
 
     $questions = $db_controller->getRandomQuestionsByModule($moduleId, $questionCount);
+    echo '<script>console.log("Anzahl Fragen: ' . count($questions) . '");</script>';
     $userId = $_SESSION['user']['user_id'];
 
     if (!empty($questions)) {
-        $examId = $db_controller->createMockExam($userId, $moduleId, $questions);
+        echo '<script>console.log("Fragen: ' . htmlspecialchars(print_r($questions, true)) . '");</script>';
+        $examId = $db_controller->createMockExam($moduleId, $userId, $questions);
         if ($examId) {
             echo '<script>window.location.href = "answerExam.php?exam_id=' . $examId . '";</script>';
             exit;
