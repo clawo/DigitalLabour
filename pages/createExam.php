@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <?php include '../includes/htmlHead.php'; ?>
+    <title>Mock Exam</title>
+</head>
+<?php include '../includes/header.php'; ?>
+
 <?php
 require_once '../includes/db_controller.php';
 
@@ -45,17 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="de">
-
-<head>
-    <?php include '../includes/htmlHead.php'; ?>
-    <title>Mock Exam</title>
-</head>
-
-<body>
-<?php include '../includes/header.php'; ?>
 
 <div class="body-wrapper">
     <div class="container">
