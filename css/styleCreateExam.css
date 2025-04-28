@@ -7,7 +7,7 @@
   }
   
   body {
-    font-family: Arial, sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #fff;
@@ -27,7 +27,7 @@
   }
   
   .tag {
-    background-color: #125D95;
+    background-color: #1e2a38;
     color: white;
     border-radius: 20px;
     padding: 10px 20px;
@@ -35,13 +35,6 @@
     width: fit-content;
   }
   
-  .box {
-    background-color: #125D95;
-    height: 150px;
-    border-radius: 20px;
-    color: white;
-    padding: 20px;
-  }
   
   .section-title {
     font-weight: bold;
@@ -75,25 +68,10 @@
     width: 100%;
   }
   
-  table,
-  th,
-  td {
-    border: 1px solid black;
-  }
-  
-  th,
-  td {
-    padding: 6px;
-    text-align: left;
-  }
-  
-  .criteria input {
-    width: 100%;
-    margin-top: 4px;
-  }
+
   
   .button {
-    background-color: #125D95;
+    background-color: #1e2a38;
     color: white;
     border: none;
     border-radius: 20px;
