@@ -26,14 +26,12 @@ if ($moduleId) {
     $module = $db_controller->getModuleById($moduleId);
 
     if (empty($module)) {
-        //echo '<script>alert("Modul nicht gefunden.");</script>';
         echo '<script>window.location.href = "../index.php";</script>';
         exit;
     }
 
     $questionCount = $db_controller->getQuestionCountByModule($moduleId);
 } else {
-    echo '<script>alert("Modul-ID nicht angegeben.");</script>';
     echo '<script>window.location.href = "../index.php";</script>';
     exit;
 }
