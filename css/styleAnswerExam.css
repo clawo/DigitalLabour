@@ -1,8 +1,14 @@
         
        body { 
-        font-family: Arial, sans-serif;
-            margin: 40px;
+            margin: 0px;
         }
+
+        .contentBody { 
+            font-family: 'Bebas Neue', sans-serif;
+                margin: 40px;
+            }
+
+
         h1 {
             font-size: 20px;
         }
