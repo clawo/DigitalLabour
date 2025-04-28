@@ -1,8 +1,16 @@
 <?php
+function getApiKey() {
+    $env = parse_ini_file('/var/www/vhosts/examwise.eu/.env');
+    return $env['OPENAI_API_KEY'];
+}
+
 // API-Aufruf an OpenAI
 function evaluateAnswer($question, $answer) {
     $apiUrl = 'https://api.openai.com/v1/completions';
-    //$apiKey = ''; 
+    $apiKey = getApiKey();
+
+    echo '<script>console.log("API-Key: ' . $apiKey . '");</script>';
+    exit();
 
     // Erstellen des Prompts
     $prompt = "Bewerte die folgende Antwort auf die Frage nach dem deutschen Notensystem mit den Noten (1.0, 1.3, 1.7, 2.0, ..., 6.0). Gib das Ergebnis bitte in **diesem strukturierten Format** aus:
@@ -17,7 +25,7 @@ function evaluateAnswer($question, $answer) {
 
     // API-Daten
     $postData = [
-        'model' => 'gpt-3.5-turbo', 
+        'model' => 'gpt-3.5-turbo',
         'prompt' => $prompt,
         'max_tokens' => 300,
         'temperature' => 0.7,
@@ -46,6 +54,18 @@ function evaluateAnswer($question, $answer) {
     return $responseData['choices'][0]['text'] ?? 'Keine Antwort erhalten.';
 }
 
+// Note und Begründung extrahieren
+function extractGrade($evaluation) {
+    preg_match('/**Note:**\s*([0-9]+\.[0-9])/', $evaluation, $matches);
+    return $matches[1] ?? 'Keine Note gefunden';
+}
+
+function extractFeedback($evaluation) {
+    preg_match('/**Begründung & Verbesserung:**\s*(.*)/', $evaluation, $matches);
+    return $matches[1] ?? 'Keine Begründung gefunden';
+}
+
+/*
 // Wenn das Formular abgeschickt wurde, die Daten auswerten
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
     $questionId = key($_POST['antworten']); // ID der Frage
@@ -57,17 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
     // Auswertung durch ChatGPT
     $evaluation = evaluateAnswer($question, $answer);
 
-    // Note und Begründung extrahieren
-    function extractGrade($evaluation) {
-        preg_match('/**Note:**\s*([0-9]+\.[0-9])/', $evaluation, $matches);
-        return $matches[1] ?? 'Keine Note gefunden';
-    }
-
-    function extractFeedback($evaluation) {
-        preg_match('/**Begründung & Verbesserung:**\s*(.*)/', $evaluation, $matches);
-        return $matches[1] ?? 'Keine Begründung gefunden';
-    }
-
     // Die extrahierte Note und Begründung
     $grade = extractGrade($evaluation);
     $feedback = extractFeedback($evaluation);
@@ -76,4 +85,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
     echo "Note: " . $grade . "<br>";
     echo "Begründung & Verbesserung: " . $feedback . "<br>";
 }
+*/
 ?>

@@ -45,9 +45,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
         $answer = trim($answer);
 
         $db_controller->updateMockAnswer($examId, $questionId, $answer);
+
+        // evaluate the answer using ChatGPT
+        $evaluation = evaluateAnswer($mockQuestions[$questionId]['question'], $answer);
+        exit();
+        if ($evaluation == "Fehler bei der API-Anfrage.") {
+            echo '<script>alert("Fehler bei der Auswertung der Antwort.");</script>';
+            continue;
+        }
+
+        $feedback = extractFeedback($evaluation);
+        $grade = extractGrade($evaluation);
+
+        // save the evaluation result
+        $db_controller->updateMockEvaluation($examId, $questionId, $feedback, $grade);
     }
 
-    echo '<script>window.location.href = "viewExam.php?exam_id=' . $examId . '";</script>';
+    echo '<script>window.location.href = "grading.php?exam_id=' . $examId . '";</script>';
     exit;
 }
 ?>
