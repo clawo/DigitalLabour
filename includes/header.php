@@ -17,7 +17,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 $cssPath = __DIR__ . '/../css/style' . ucfirst($currentPage) . '.css';
 $cssLink = '../css/style' . ucfirst($currentPage) . '.css';
 
-$loggedIn = isset($_SESSION['user'] ) && !empty($_SESSION['user']['user_id']);
+$loggedIn = isset($_SESSION['user']) && !empty($_SESSION['user']['user_id']);
 echo '<script>console.log("User ID: ' . ($_SESSION['user']['user_id'] ?? 'nicht gesetzt') . '");</script>';
 ?>
 

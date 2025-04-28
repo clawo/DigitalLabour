@@ -11,7 +11,7 @@ $modules = [];
 $sortierung = $_GET['sortierung'] ?? 'name';
 $suche = $_GET['suche'] ?? '';
 
-if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true) {
+if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
     $db_controller = new DatabaseController();
 
     // load modules from database
