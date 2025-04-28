@@ -4,6 +4,9 @@ body {
     background-color: #f5f5f5;
   }
 
+  .containerbody {
+    margin: 10%;
+  }
 
   .search-bar {
     display: flex;

@@ -9,6 +9,7 @@
 <?php include '../includes/header.php'; ?>
 
 <body>
+<div class="containerbody">
 <div>
       <h1>GRUNDLAGEN DER INFORMATIK</h1>
       <p>Prof. Dr. Kamyar Sarshar</p>
@@ -48,6 +49,7 @@
         <button class="save">SPEICHERN</button>
       </div>
     </div>
+  </div>
   </div>
   </body>
 
