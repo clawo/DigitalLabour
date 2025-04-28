@@ -39,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $questionCount = 1;
     }
 
-    echo '<script>console.log("Anzahl Fragen: ' . $questionCount . '");</script>';
     $questions = $db_controller->getRandomQuestionsByModule($moduleId, $questionCount);
+    echo '<script>console.log("Debug");</script>';
     echo '<script>console.log("Anzahl geladene Fragen: ' . count($questions) . '");</script>';
     $userId = $_SESSION['user']['user_id'];
 

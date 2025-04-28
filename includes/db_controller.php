@@ -209,15 +209,17 @@
         }
 
         public function getRandomQuestionsByModule($moduleId, $count) {
+            $count = (int)$count;
             $stmt = $this->pdo->prepare("
                 SELECT * FROM questions
                 WHERE module_id = ?
                 ORDER BY RAND()
-                LIMIT ?
+                LIMIT $count
             ");
-            $stmt->execute([$moduleId, $count]);
+            $stmt->execute([$moduleId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+
 
         public function getQuestionCountByModule($moduleId) {
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM questions WHERE module_id = ?");
