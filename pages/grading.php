@@ -25,18 +25,20 @@
     </div>
 
     <div class="section question">
+        <h3><strong>Note</strong></h3>
+        <textareaGrade> Placeholder </textareaGrade>
+    </div>
+
+    <div class="section question">
         <h3><strong>Begründung der Note durch ChatGPT</strong></h3>
         <label for="antwort">Antwort:</label><br>
         <textarea> Placeholder </textarea>
     </div>
 
-    <div class="section question">
-        <h3><strong>Note</strong></h3>
-        <textareaGrade> Placeholder </textareaGrade>
-    </div>
+    
 
     <div class="button-container">
-        <button>Weiter</button>
+        <button> Weiter </button>
     </div>
 </div>
 </body>
