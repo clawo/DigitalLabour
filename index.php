@@ -16,8 +16,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
 
     // load modules from database
     $modules = $db_controller->getModulesFiltered($sortierung, $suche);
-
-    echo '<script>console.log("Module geladen: ' . count($modules) . ' Module gefunden.");</script>';
 }
 ?>
 
@@ -48,14 +46,23 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
     <section class="modul-grid">
         <?php if (!empty($modules)): ?>
             <?php foreach ($modules as $module): ?>
-                <div class="modul-card">
+                <?php
+                $isStudent = ($_SESSION['user']['role_id'] === 2);
+                $onclick = $isStudent ? "onclick=\"window.location.href='pages/createExam.php?module_id=" . urlencode($module['module_id']) . "'\"" : "";
+                ?>
+                <div class="modul-card" style="cursor: <?= $isStudent ? 'pointer' : 'default' ?>;" <?= $onclick ?>>
                     <div class="image-placeholder">
                         <img src="images/placeholder.png" alt="Modulbild">
                     </div>
                     <div class="modul-info">
                         <h3><?= htmlspecialchars($module['module_name']) ?></h3>
                         <p><strong>Label:</strong> <?= htmlspecialchars($module['module_label']) ?></p>
-                        <!-- Optional weitere Infos wie Semester etc. -->
+
+                        <!-- Buttons nur für Dozenten -->
+                        <?php if ($_SESSION['user']['role'] === 'dozent'): ?>
+                            <a href="pages/createExam.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">Examen anlegen</a>
+                            <!--<a href="pages/editQuestions.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">Fragen bearbeiten</a>-->
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>

@@ -17,14 +17,10 @@
                 <div class="tag">MODUL: 1</div>
                 <div class="tag">TITEL: MOCK EXAM</div>
 
-
-            
             <!-- column right -->
             <div class="right">
                 <div class="section-title">3. ANZAHL DER FRAGEN:</div>
                 <input type="text" />
-
-               
 
                 <button class="button">Erstellen</button>
             </div>
