@@ -24,6 +24,8 @@ if (!isset($_SESSION['user'])) {
 $moduleId = $_GET['module_id'] ?? null;
 if ($moduleId) {
     $module = $db_controller->getModuleById($moduleId);
+    echo '<script>console.log(' . json_encode($module) . ');</script>';
+
     if (!$module) {
         echo '<script>alert("Modul nicht gefunden.");</script>';
         echo '<script>window.location.href = "../index.php";</script>';
