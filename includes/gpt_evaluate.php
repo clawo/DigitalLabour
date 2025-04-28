@@ -9,9 +9,6 @@ function evaluateAnswer($question, $answer) {
     $apiUrl = 'https://api.openai.com/v1/completions';
     $apiKey = getApiKey();
 
-    echo '<script>console.log("API-Key: ' . $apiKey . '");</script>';
-    exit();
-
     // Erstellen des Prompts
     $prompt = "Bewerte die folgende Antwort auf die Frage nach dem deutschen Notensystem mit den Noten (1.0, 1.3, 1.7, 2.0, ..., 6.0). Gib das Ergebnis bitte in **diesem strukturierten Format** aus:
 
