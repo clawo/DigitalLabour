@@ -1,4 +1,6 @@
-
+<?php
+require_once '../includes/header.php';
+?>
 <!-- ==========================
      Login-Bereich
      ========================== -->
@@ -23,11 +25,7 @@
 
 <?php include '../includes/footer.php'; ?>
 <?php
-// login.php
-// Login-Logik und HTML in einer Datei
-session_start();
-require_once '../db_connect.php';
-require_once '../DatabaseController.php';
+require_once '../includes/db_controller.php';
 
 function handleLogin(): ?string {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -49,7 +47,8 @@ function handleLogin(): ?string {
             'last_name'  => $result['user']['last_name'],
             'email'      => $result['user']['email'],
         ];
-        header('Location: index.php');
+
+        echo '<script>window.location.href = "../index.php";</script>';
         exit;
     }
 
@@ -58,6 +57,3 @@ function handleLogin(): ?string {
 
 $errorMessage = handleLogin();
 ?>
-
-<?php include '../includes/htmlHead.php'; ?>
-<?php include '../includes/header.php'; ?>

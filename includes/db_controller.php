@@ -9,47 +9,6 @@
             echo '<script>console.log("Initializing DatabaseController...");</script>';
             $this->pdo = getDB();
         }
-        public function handleRegister(): ?string {
-            echo '<script>console.log("Handling registration...");</script>';
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                 return null;
-             }
-            $roleInput   = $_POST['rolle'] ?? '';
-            $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
-            $firstName   = trim($_POST['vorname'] ?? '');
-            $lastName    = trim($_POST['nachname'] ?? '');
-            $email       = trim($_POST['email'] ?? '');
-            $password    = $_POST['password'] ?? '';
-        
-            if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
-                return 'Bitte alle Pflichtfelder ausfüllen.';
-            }
-    
-            $data = [
-                'username'   => $email, // Username hier als E-Mail
-                'email'      => $email,
-                'first_name' => $firstName,
-                'last_name'  => $lastName,
-                'role_id'    => $roleId,
-                'password'   => $password
-            ];
-        
-            echo '<script>console.log("Data to be inserted: ' . json_encode($data) . '");</script>';
-            $result = $controller->registerUser($data);
-        
-            if ($result['success']) {
-                $_SESSION['user'] = [
-                    'user_id'  => $result['user_id'],
-                    'username' => $email,
-                    'role_id'  => $roleId,
-                    'email'    => $email,
-                ];
-                header('Location: welcome.php');
-                exit;
-            }
-        
-            return $result['message'] ?? 'Registrierung fehlgeschlagen.';
-        }
         
         // ===== AUTHENTICATION =====
         public function authorize($userId, $allowedRoles) {

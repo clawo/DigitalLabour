@@ -1,18 +1,52 @@
 <?php
-session_start();
+require_once '../includes/header.php';
+require_once '../includes/db_controller.php';
 
-require_once __DIR__ . '/../includes/htmlHead.php';
-require_once __DIR__ . '/../includes/header.php';
-require_once __DIR__ . '/../db_connect.php';
-require_once __DIR__ . '/../db_controller.php';
+$db_controller = new DatabaseController();
+$errorMessage = '';
 
-$database_controller = new DatabaseController();   // falls dein
-                                                         // Konstruktor
-                                                         // die DB-Verbindung braucht
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $errorMessage = handleRegister();
+}
 
-$errorMessage = '';                                      // leerer Default
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {             // nur verarbeiten,
-    $errorMessage = $database_controller->handleRegister($database_controller);
+function handleRegister(): ?string {
+    global $db_controller;
+    echo '<script>console.log("Handling registration...");</script>';
+
+    $roleInput   = $_POST['rolle'] ?? '';
+    $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
+    $firstName   = trim($_POST['vorname'] ?? '');
+    $lastName    = trim($_POST['nachname'] ?? '');
+    $email       = trim($_POST['email'] ?? '');
+    $password    = $_POST['password'] ?? '';
+
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
+        return 'Bitte alle Pflichtfelder ausfüllen.';
+    }
+
+    $data = [
+        'username'   => $firstName . ' ' . $lastName,
+        'email'      => $email,
+        'first_name' => $firstName,
+        'last_name'  => $lastName,
+        'role_id'    => $roleId,
+        'password'   => $password
+    ];
+
+    $result = $db_controller->registerUser($data);
+
+    if ($result['success']) {
+        $_SESSION['user'] = [
+            'user_id'  => $result['user_id'],
+            'username' => $email,
+            'role_id'  => $roleId,
+            'email'    => $email,
+        ];
+        header('Location: ../index.php');
+        exit;
+    }
+
+    return $result['message'] ?? 'Registrierung fehlgeschlagen.';
 }
 ?>
 <main class="register-container">

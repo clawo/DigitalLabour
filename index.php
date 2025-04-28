@@ -4,7 +4,6 @@
 // Module mit Suchfunktion und Sortierdropdown
 // ==============================
 
-include 'includes/htmlHead.php';
 include 'includes/header.php';
 ?>
 
