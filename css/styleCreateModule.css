@@ -102,6 +102,9 @@ body {
     color: white;
   }
 
-  .editor-buttons:hover {
+  .editor-buttons button:hover {
+    background-color: #2e3e50;
+  }
+  .editor-buttons button.save:hover {
     background-color: #2e3e50;
   }
