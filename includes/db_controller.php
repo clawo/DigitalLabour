@@ -193,7 +193,7 @@
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function getModuleById($moduleId) {
+        public function getModuleById($moduleId): array {
             $stmt = $this->pdo->prepare("SELECT * FROM modules WHERE module_id = ?");
             $stmt->execute([$moduleId]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
