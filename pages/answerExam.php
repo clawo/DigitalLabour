@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
 
         // evaluate the answer using ChatGPT
         $evaluation = evaluateAnswer($mockQuestions[$questionId]['question'], $answer);
-        if ($evaluation == "Fehler bei der API-Anfrage.") {
+        if ($evaluation == "Fehler bei der API-Anfrage." || $evaluation == "API-Schlüssel nicht gesetzt.") {
             echo '<script>alert("Fehler bei der Auswertung der Antwort.");</script>';
             continue;
         }

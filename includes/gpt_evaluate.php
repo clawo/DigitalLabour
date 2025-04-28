@@ -7,7 +7,15 @@ function getApiKey() {
 // API-Aufruf an OpenAI
 function evaluateAnswer($question, $answer) {
     $apiUrl = 'https://api.openai.com/v1/completions';
+    echo '<script>console.log("Lade API-Key");</script>';
     $apiKey = getApiKey();
+
+    // check if API key is set
+    if (empty($apiKey)) {
+        return 'API-Schlüssel nicht gesetzt.';
+    }
+
+    echo '<script>console.log("API-Key: geladen");</script>';
 
     // Erstellen des Prompts
     $prompt = "Bewerte die folgende Antwort auf die Frage nach dem deutschen Notensystem mit den Noten (1.0, 1.3, 1.7, 2.0, ..., 6.0). Gib das Ergebnis bitte in **diesem strukturierten Format** aus:
@@ -19,6 +27,8 @@ function evaluateAnswer($question, $answer) {
     Frage: $question
 
     Antwort: $answer";
+
+    echo '<script>console.log("Prompt: erstellt");</script>';
 
     // API-Daten
     $postData = [
@@ -40,8 +50,14 @@ function evaluateAnswer($question, $answer) {
         ],
     ];
 
+    echo '<script>console.log("HTTP-Stream-Context: erstellt");</script>';
+
     $context = stream_context_create($contextOptions);
+
+    echo '<script>console.log("Stream-Context: erstellt");</script>';
     $response = file_get_contents($apiUrl, false, $context);
+
+    echo '<script>console.log("API-Antwort: ' . $response . '");</script>';
 
     if ($response === FALSE) {
         return 'Fehler bei der API-Anfrage.';
