@@ -213,6 +213,23 @@
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
+        public function getRandomQuestionsByModule($moduleId, $count) {
+            $stmt = $this->pdo->prepare("
+                SELECT * FROM questions
+                WHERE module_id = ?
+                ORDER BY RAND()
+                LIMIT ?
+            ");
+            $stmt->execute([$moduleId, $count]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function getQuestionCountByModule($moduleId) {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM questions WHERE module_id = ?");
+            $stmt->execute([$moduleId]);
+            return $stmt->fetchColumn();
+        }
+
         public function getQuestion($questionId) {
             $stmt = $this->pdo->prepare("SELECT * FROM questions WHERE question_id = ?");
             $stmt->execute([$questionId]);
@@ -221,13 +238,20 @@
 
 
         // ===== MOCK EXAMS =====
-        public function createMockExam($userId, $moduleId, $grade) {
+        public function createMockExam($userId, $moduleId, $questions) {
             $stmt = $this->pdo->prepare("
-                INSERT INTO mock_exams (user_id, module_id, grade)
+                INSERT INTO mock_exams (user_id, module_id)
                 VALUES (?, ?, ?)
             ");
-            $stmt->execute([$userId, $moduleId, $grade]);
-            return $this->pdo->lastInsertId();
+            $stmt->execute([$userId, $moduleId]);
+
+            $examId = $this->pdo->lastInsertId();
+
+            foreach ($questions as $question) {
+                $this->insertMockQuestion($examId, $question['question_id'], null, null, null);
+            }
+
+            return $examId;
         }
 
         public function getMockExam($examId) {
