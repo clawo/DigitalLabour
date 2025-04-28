@@ -1,12 +1,3 @@
-<!DOCTYPE html>
-<html lang="de">
-
-<head>
-    <?php include '../includes/htmlHead.php'; ?>
-    <title>Mock Exam</title>
-</head>
-<?php include '../includes/header.php'; ?>
-
 <?php
 require_once '../includes/db_controller.php';
 
