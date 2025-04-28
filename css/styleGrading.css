@@ -1,5 +1,5 @@
         
-       body { 
+    body { 
         margin: 0px;
     }
 
@@ -29,6 +29,16 @@
         resize: none;
     }
 
+    .textareaGrade {
+        width: 50%;
+        height: 150px;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 14px;
+        background-color: #f7f7f7;
+        border: 1px solid #ccc;
+        resize: none;
+    }
 
     .button-container {
         margin-top: 40px;

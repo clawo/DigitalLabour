@@ -3,7 +3,7 @@
 
 <head>
     <?php include '../includes/htmlHead.php'; ?>
-    <title>Answer Exam</title>
+    <title>Grading with ChatGPT</title>
 </head>
 
 <?php include '../includes/header.php'; ?>
@@ -21,11 +21,24 @@
         <h3><strong>Beispielfrage:</strong></h3>
         <p>1. Was versteht man unter dem Begriff "Nachhaltigkeit"? </p>
         <label for="antwort">Antwort:</label><br>
-        <textarea id="antwort" name="antwort"></textarea>
+        <textarea> Placeholder </textarea>
     </div>
 
+    <div class="section question">
+        <h3><strong>Note</strong></h3>
+        <textareaGrade> Placeholder </textareaGrade>
+    </div>
+
+    <div class="section question">
+        <h3><strong>Begründung der Note durch ChatGPT</strong></h3>
+        <label for="antwort">Antwort:</label><br>
+        <textarea> Placeholder </textarea>
+    </div>
+
+    
+
     <div class="button-container">
-        <button>Weiter</button>
+        <button> Weiter </button>
     </div>
 </div>
 </body>
