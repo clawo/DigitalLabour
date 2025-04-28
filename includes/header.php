@@ -16,6 +16,8 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 // Pfade für CSS
 $cssPath = __DIR__ . '/../css/style' . ucfirst($currentPage) . '.css';
 $cssLink = '../css/style' . ucfirst($currentPage) . '.css';
+
+$loggedIn = isset($_SESSION['user'] ) && !empty($_SESSION['user']['user_id']);
 ?>
 
 <!-- ==============================
@@ -151,5 +153,9 @@ $cssLink = '../css/style' . ucfirst($currentPage) . '.css';
     </div>
 
     <!-- Login-Button -->
-    <a href="../pages/login.php" class="login-button">Login</a>
+    <?php if ($loggedIn): ?>
+        <a href="../pages/logout.php" class="login-button">Logout</a>
+    <?php else: ?>
+        <a href="../pages/login.php" class="login-button">Login</a>
+    <?php endif; ?>
 </div>

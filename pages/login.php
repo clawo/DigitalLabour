@@ -48,7 +48,6 @@ function handleLogin(): ?string {
             'email'      => $result['user']['email'],
         ];
 
-        header('Location: ../index.php');
         echo '<script>window.location.href = "../index.php";</script>';
         exit;
     }
