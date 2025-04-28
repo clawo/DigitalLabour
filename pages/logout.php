@@ -1,4 +1,5 @@
 <?php
+require_once '../includes/header.php';
 unset($_SESSION['user']);
 
 echo '<script>console.log("Session beendet.");</script>';
