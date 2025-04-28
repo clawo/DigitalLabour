@@ -1,0 +1,46 @@
+        
+       body { 
+        margin: 0px;
+    }
+
+    .contentBody { 
+        font-family: 'Bebas Neue', sans-serif;
+            margin: 40px;
+        }
+
+
+    h1 {
+        font-size: 50px;
+    }
+    .section {
+        margin-top: 40px;
+    }
+    .question {
+        margin-top: 30px;
+    }
+    textarea {
+        width: 100%;
+        height: 150px;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 14px;
+        background-color: #f7f7f7;
+        border: 1px solid #ccc;
+        resize: none;
+    }
+    .button-container {
+        margin-top: 40px;
+        text-align: right;
+    }
+    button {
+        background-color: #1e2a38;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #2e3e50;
+    }
