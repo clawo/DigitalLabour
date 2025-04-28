@@ -162,8 +162,35 @@
 
 
         // ===== MODULES =====
-        public function getAllModules() {
+        public function getAllModules(): array {
             return $this->pdo->query("SELECT * FROM modules")->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function getModulesFiltered($sortierung = 'name', $suche = '') {
+            $allowedSortFields = [
+                'name' => 'module_name'
+            ];
+
+            // fallback to default sort field
+            $sortField = $allowedSortFields[$sortierung] ?? 'module_name';
+
+            $query = "SELECT * FROM modules";
+
+            if (!empty($suche)) {
+                $query .= " WHERE module_name LIKE :suche OR module_label LIKE :suche";
+            }
+
+            $query .= " ORDER BY $sortField ASC";
+
+            $stmt = $this->pdo->prepare($query);
+
+            if (!empty($suche)) {
+                $sucheParam = '%' . $suche . '%';
+                $stmt->bindParam(':suche', $sucheParam, PDO::PARAM_STR);
+            }
+
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function getModuleById($moduleId) {
