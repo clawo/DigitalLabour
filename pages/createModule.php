@@ -16,7 +16,7 @@
     </div>
     <div class="search-bar">
       <input type="text" placeholder="Fragen durchsuchen">
-      <span>&#128269;</span>
+      
     </div>
   
 
