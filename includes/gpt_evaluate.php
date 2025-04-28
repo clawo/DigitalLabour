@@ -9,7 +9,6 @@ function evaluateAnswer($question, $answer) {
     $apiUrl = 'https://api.openai.com/v1/completions';
     echo '<script>console.log("Lade API-Key");</script>';
     $apiKey = getApiKey();
-    echo '<script>console.log("API-Key: ' . $apiKey . '");</script>';
 
     // check if API key is set
     if (empty($apiKey)) {
