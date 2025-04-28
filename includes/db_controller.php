@@ -196,7 +196,10 @@
         public function getModuleById($moduleId): array {
             $stmt = $this->pdo->prepare("SELECT * FROM modules WHERE module_id = ?");
             $stmt->execute([$moduleId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $module = $stmt->fetch(PDO::FETCH_ASSOC);
+            echo '<script>console.log("Module: ' . json_encode($module) . '");</script>';
+
+            return $module;
         }
 
         public function getModuleByName($moduleName) {
