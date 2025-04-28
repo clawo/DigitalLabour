@@ -26,7 +26,7 @@ if ($moduleId) {
     $module = $db_controller->getModuleById($moduleId);
 
     if (empty($module)) {
-        echo '<script>alert("Modul nicht gefunden.");</script>';
+        //echo '<script>alert("Modul nicht gefunden.");</script>';
         echo '<script>window.location.href = "../index.php";</script>';
         exit;
     }
