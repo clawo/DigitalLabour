@@ -14,11 +14,11 @@
 <h1>Aufgaben: "Modul 1"</h1>
 
     <div class="section">
-        <strong>Teil A:</strong> Wissensfragen 
+        <strong><h2>Teil A:</h2></strong> <h2>Wissensfragen</h2>
     </div>
 
     <div class="section question">
-        <p><strong>Beispielfrage:</strong></p>
+        <h3><strong>Beispielfrage:</strong></h3>
         <p>1. Was versteht man unter dem Begriff "Nachhaltigkeit"? </p>
         <label for="antwort">Antwort:</label><br>
         <textarea id="antwort" name="antwort"></textarea>
