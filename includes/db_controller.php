@@ -155,6 +155,24 @@
 
 
         // ===== MODULES =====
+        public function createModule($module_name, $module_label, $userId) {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO modules (module_name, module_label, created_by)
+                VALUES (?, ?, ?)
+            ");
+            $stmt->execute([$module_name, $module_label, $userId]);
+            return $this->pdo->lastInsertId();
+        }
+
+        public function checkModuleCreatedByUser($moduleId, $userId) {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) FROM modules
+                WHERE module_id = ? AND created_by = ?
+            ");
+            $stmt->execute([$moduleId, $userId]);
+            return $stmt->fetchColumn() > 0;
+        }
+
         public function getAllModules(): array {
             return $this->pdo->query("SELECT * FROM modules")->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -202,6 +220,16 @@
 
 
         // ===== QUESTIONS =====
+        public function updateQuestion($questionId, $newQuestionText) {
+            $stmt = $this->pdo->prepare("UPDATE questions SET question = ? WHERE question_id = ?");
+            return $stmt->execute([$newQuestionText, $questionId]);
+        }
+
+        public function deleteQuestion($questionId) {
+            $stmt = $this->pdo->prepare("DELETE FROM questions WHERE question_id = ?");
+            return $stmt->execute([$questionId]);
+        }
+
         public function getQuestionsByModule($moduleId) {
             $stmt = $this->pdo->prepare("SELECT * FROM questions WHERE module_id = ?");
             $stmt->execute([$moduleId]);
