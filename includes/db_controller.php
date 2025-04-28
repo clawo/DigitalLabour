@@ -184,7 +184,7 @@
 
             $query .= " ORDER BY $sortField ASC";
 
-            $stmt = $this->db->prepare($query);
+            $stmt = $this->pdo->prepare($query);
 
             if (!empty($suche)) {
                 $sucheParam = '%' . $suche . '%';

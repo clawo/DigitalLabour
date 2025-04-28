@@ -8,7 +8,7 @@ include 'includes/header.php';
 require_once 'includes/db_controller.php';
 
 $modules = [];
-$sortierung = $_GET['sortierung'] ?? 'name'; // Default Sortierung
+$sortierung = $_GET['sortierung'] ?? 'name';
 $suche = $_GET['suche'] ?? '';
 
 if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true) {
@@ -16,6 +16,8 @@ if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true) {
 
     // load modules from database
     $modules = $db_controller->getModulesFiltered($sortierung, $suche);
+
+    echo '<script>console.log("Module geladen: ' . count($modules) . ' Module gefunden.");</script>';
 }
 ?>
 
