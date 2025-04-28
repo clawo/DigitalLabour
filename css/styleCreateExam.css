@@ -81,4 +81,8 @@
     align-self: flex-end;
     margin-top: auto;
   }
+
+  button:hover {
+    background-color: #2e3e50;
+}
   
