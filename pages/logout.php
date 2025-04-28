@@ -1,6 +1,8 @@
 <?php
 unset($_SESSION['user']);
 
+echo '<script>console.log("Session beendet.");</script>';
+
 session_unset();
 session_destroy();
 
