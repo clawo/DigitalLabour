@@ -40,12 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $questions = $db_controller->getRandomQuestionsByModule($moduleId, $questionCount);
-    echo '<script>console.log("Debug");</script>';
-    echo '<script>console.log("Anzahl geladene Fragen: ' . count($questions) . '");</script>';
+
     $userId = $_SESSION['user']['user_id'];
 
     if (!empty($questions)) {
-        echo '<script>console.log("Fragen: ' . htmlspecialchars(print_r($questions, true)) . '");</script>';
         $examId = $db_controller->createMockExam($moduleId, $userId, $questions);
         if ($examId) {
             echo '<script>window.location.href = "answerExam.php?exam_id=' . $examId . '";</script>';

@@ -257,6 +257,20 @@
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
+        public function checkUserExamAccess($userId, $examId) {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) FROM mock_exams
+                WHERE user_id = ? AND exam_id = ?
+            ");
+            $stmt->execute([$userId, $examId]);
+
+            if ($stmt->fetchColumn() > 0) {
+                return $this->getMockExam($examId);
+            } else {
+                return false;
+            }
+        }
+
         public function getExamsByUser($userId) {
             $stmt = $this->pdo->prepare("
                 SELECT me.*, m.module_name, m.module_label
