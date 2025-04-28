@@ -177,8 +177,8 @@
     <!-- Spalte 3: Allgemeines -->
     <div class="footer-column">
       <h3>Für Alle</h3>
-      <a href="#">Kontakt</a>
-      <a href="#">Login / Registrieren</a>
+      <a href="../pages/contact.php">Kontakt</a>
+      <a href="../pages/login.php">Login / Registrieren</a>
     </div>
   </div>
 
@@ -199,8 +199,8 @@
 <div class="footer-bottom">
   <div class="copyright">© Copyright 2025</div>
   <div class="links">
-    <a href="#">AGB</a>
-    <a href="#">Impressum</a>
-    <a href="#">Datenschutz</a>
+    <a href="../pages/agb.php">AGB</a>
+    <a href="../pages/impressum.php">Impressum</a>
+    <a href="../pages/datenschutz.php">Datenschutz</a>
   </div>
 </div>

@@ -1,39 +1,82 @@
 <?php
-include '../includes/htmlHead.php';
-include '../includes/header.php';
+require_once '../includes/header.php';
+require_once '../includes/db_controller.php';
+
+$db_controller = new DatabaseController();
+$errorMessage = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $errorMessage = handleRegister();
+}
+
+function handleRegister(): ?string {
+    global $db_controller;
+    echo '<script>console.log("Handling registration...");</script>';
+
+    $roleInput   = $_POST['rolle'] ?? '';
+    $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
+    $firstName   = trim($_POST['vorname'] ?? '');
+    $lastName    = trim($_POST['nachname'] ?? '');
+    $email       = trim($_POST['email'] ?? '');
+    $password    = $_POST['password'] ?? '';
+
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
+        return 'Bitte alle Pflichtfelder ausfüllen.';
+    }
+
+    $data = [
+        'username'   => $firstName . ' ' . $lastName,
+        'email'      => $email,
+        'first_name' => $firstName,
+        'last_name'  => $lastName,
+        'role_id'    => $roleId,
+        'password'   => $password
+    ];
+
+    $result = $db_controller->registerUser($data);
+
+    if ($result['success']) {
+        $_SESSION['user'] = [
+            'user_id'  => $result['user_id'],
+            'username' => $email,
+            'role_id'  => $roleId,
+            'email'    => $email,
+        ];
+        header('Location: ../index.php');
+        exit;
+    }
+
+    return $result['message'] ?? 'Registrierung fehlgeschlagen.';
+}
 ?>
-
 <main class="register-container">
-  <h1 class="register-title">REGISTRIEREN</h1>
+    <h1 class="register-title">REGISTRIEREN</h1>
 
-  <!-- ==============================
-       Registrierungsformular
-       Action: Noch zu definierender Backend-Endpunkt
-       Method: POST
-       ============================== -->
-  <form class="register-form" method="post" action="dein-register-endpunkt.php">
+    <?php if ($errorMessage): ?>
+        <p class="error-message"><?= htmlspecialchars($errorMessage) ?></p>
+    <?php endif; ?>
 
-    <!-- Dropdown zur Auswahl der Rolle -->
-    <select name="rolle" required>
-      <option value="" disabled selected>Ich bin...</option>
-      <option value="student">Student*in</option>
-      <option value="dozent">Dozent*in</option>
-    </select>
+    <!-- action auf dieselbe Datei, XSS-sicher -->
+    <form class="register-form" method="post"
+          action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+        <select name="rolle" required>
+            <option value="" disabled <?= !isset($_POST['rolle']) ? 'selected' : '' ?>>Ich bin...</option>
+            <option value="student" <?= (isset($_POST['rolle']) && $_POST['rolle'] === 'student') ? 'selected' : '' ?>>Student*in</option>
+            <option value="dozent"  <?= (isset($_POST['rolle']) && $_POST['rolle'] === 'dozent')  ? 'selected' : '' ?>>Dozent*in</option>
+        </select>
 
-    <!-- Benutzerinformationen -->
-    <input type="text" name="vorname" placeholder="Vorname" required>
-    <input type="text" name="nachname" placeholder="Nachname" required>
-    <input type="email" name="email" placeholder="Email Adresse" required>
-    <input type="password" name="password" placeholder="Passwort" required>
+        <input type="text"     name="vorname"  placeholder="Vorname"        required value="<?= $_POST['vorname']  ?? '' ?>">
+        <input type="text"     name="nachname" placeholder="Nachname"       required value="<?= $_POST['nachname'] ?? '' ?>">
+        <input type="email"    name="email"    placeholder="Email Adresse"  required value="<?= $_POST['email']    ?? '' ?>">
+        <input type="password" name="password" placeholder="Passwort"       required>
 
-    <!-- Hinweis zur Anmeldung für bestehende Benutzer -->
-    <p class="login-hint">
-      Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
-    </p>
+        <p class="login-hint">
+            Schon einen Account? <a href="login.php">Jetzt anmelden!</a>
+        </p>
 
-    <!-- Registrierungs-Button -->
-    <button type="submit" class="register-btn">Registrieren</button>
-  </form>
+        <!-- kein JS-Onclick, reine HTML-Submission -->
+        <button type="submit" class="register-btn">Registrieren</button>
+    </form>
 </main>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
