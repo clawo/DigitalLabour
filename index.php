@@ -47,7 +47,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
         <?php if (!empty($modules)): ?>
             <?php foreach ($modules as $module): ?>
                 <?php
-                $isStudent = ($_SESSION['user']['role'] === 'student');
+                $isStudent = ($_SESSION['user']['role_id'] === 2);
                 $onclick = $isStudent ? "onclick=\"window.location.href='pages/createExam.php?module_id=" . urlencode($module['module_id']) . "'\"" : "";
                 ?>
                 <div class="modul-card" style="cursor: <?= $isStudent ? 'pointer' : 'default' ?>;" <?= $onclick ?>>
