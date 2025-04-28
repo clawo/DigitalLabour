@@ -194,6 +194,7 @@
         }
 
         public function getModuleById($moduleId): array {
+            echo '<script>console.log("Fetching module with ID: ' . $moduleId . '");</script>';
             $stmt = $this->pdo->prepare("SELECT * FROM modules WHERE module_id = ?");
             $stmt->execute([$moduleId]);
             $module = $stmt->fetch(PDO::FETCH_ASSOC);

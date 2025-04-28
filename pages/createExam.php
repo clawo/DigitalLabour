@@ -26,13 +26,11 @@ if ($moduleId) {
     $module = $db_controller->getModuleById($moduleId);
 
     if (empty($module)) {
-        echo '<script>window.location.href = "../index.php";</script>';
         exit;
     }
 
     $questionCount = $db_controller->getQuestionCountByModule($moduleId);
 } else {
-    echo '<script>window.location.href = "../index.php";</script>';
     exit;
 }
 
