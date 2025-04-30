@@ -5,71 +5,74 @@
     <?php include '../includes/htmlHead.php'; ?>
     <title>Mock Exam</title>
 </head>
+
 <?php include '../includes/header.php'; ?>
 
-<?
-// include the database controller
+<?php
 require_once '../includes/db_controller.php';
 
-// create an instance of the DatabaseController
 $db_controller = new DatabaseController();
 
-// check if the user is logged in
 if (!isset($_SESSION['user'])) {
     echo '<script>window.location.href = "../index.php";</script>';
     exit;
 }
 
-# load module information with id from URL
 $moduleId = $_GET['module_id'] ?? null;
-if ($moduleId) {
-    $module = $db_controller->getModuleById($moduleId);
-    echo '<script>console.log(' . json_encode($module) . ');</script>';
+if (!$moduleId) {
+    echo '<script>alert("Modul-ID nicht angegeben."); window.location.href = "../index.php";</script>';
+    exit;
+}
+echo '<script>console.log("Module ID: ' . htmlspecialchars($moduleId) . '");</script>';
 
-    if (!$module) {
-        echo '<script>alert("Modul nicht gefunden.");</script>';
-        echo '<script>window.location.href = "../index.php";</script>';
-        exit;
-    }
-
-    $questionCount = $db_controller->getQuestionCountByModule($moduleId);
-} else {
-    echo '<script>alert("Modul-ID nicht angegeben.");</script>';
-    echo '<script>window.location.href = "../index.php";</script>';
+$module = $db_controller->getModuleById($moduleId);
+if (!$module) {
+    echo '<script>alert("Modul nicht gefunden."); window.location.href = "../index.php";</script>';
     exit;
 }
 
+$questionCountAvailable = $db_controller->getQuestionCountByModule($moduleId);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // select random amount of questions from module
-    $questionCount = $_POST['questionCount'] ?? 1;
+    $questionCount = (int) ($_POST['questionCount'] ?? 1);
+    if ($questionCount < 1) {
+        $questionCount = 1;
+    }
+
     $questions = $db_controller->getRandomQuestionsByModule($moduleId, $questionCount);
+
     $userId = $_SESSION['user']['user_id'];
 
-    if ($questions) {
-        # create mock exam
-        $examId = $db_controller->createMockExam($userId, $moduleId, $questions);
-
-        echo '<script>window.location.href = "answerExam.php?exam_id=' . $examId . '";</script>';
+    if (!empty($questions)) {
+        $examId = $db_controller->createMockExam($moduleId, $userId, $questions);
+        if ($examId) {
+            echo '<script>window.location.href = "answerExam.php?exam_id=' . $examId . '";</script>';
+            exit;
+        } else {
+            echo '<script>alert("Fehler beim Erstellen des Mock Exams.");</script>';
+        }
     } else {
         echo '<script>alert("Keine Fragen gefunden.");</script>';
     }
 }
 ?>
+
 <body>
 <div class="body-wrapper">
-        <div class="container">
-            <!-- column left -->
-            <div class="left">
-                <div class="tag">MODUL: <?= htmlspecialchars($module['module_name']) ?></div>
-                <div class="tag">TITEL: <?= htmlspecialchars($module['module_title']) ?></div>
+    <div class="container">
+        <div class="left">
+            <div class="tag">MODUL: <?= htmlspecialchars($module['module_name']) ?></div>
+            <div class="tag">LABEL: <?= htmlspecialchars($module['module_label']) ?></div>
+        </div>
 
-            <!-- column right -->
-            <div class="right">
+        <div class="right">
+            <form method="post" action="">
                 <div class="section-title">3. ANZAHL DER FRAGEN:</div>
-                <input type="number" class="input-field" id="questionCount" name="questionCount" value="1" min="1" max="<?= htmlspecialchars($questionCount) ?>">
+                <input type="number" class="input-field" id="questionCount" name="questionCount"
+                       value="1" min="1" max="<?= (int)$questionCountAvailable ?>" required>
 
-                <button class="button">Erstellen</button>
-            </div>
+                <button type="submit" class="button">Erstellen</button>
+            </form>
         </div>
     </div>
 </div>

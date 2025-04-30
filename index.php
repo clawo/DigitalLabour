@@ -59,9 +59,10 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
                         <p><strong>Label:</strong> <?= htmlspecialchars($module['module_label']) ?></p>
 
                         <!-- Buttons nur für Dozenten -->
-                        <?php if ($_SESSION['user']['role'] === 'dozent'): ?>
-                            <a href="pages/createExam.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">Examen anlegen</a>
-                            <!--<a href="pages/editQuestions.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">Fragen bearbeiten</a>-->
+                        <?php if ($_SESSION['user']['role_id'] === 1): ?>
+                            <a href="pages/createExam.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">Probeklausur anlegen</a>
+                            <div class="divider"></div>
+                            <a href="pages/createModule.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">Fragen bearbeiten</a>
                         <?php endif; ?>
                     </div>
                 </div>
