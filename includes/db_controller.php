@@ -447,15 +447,7 @@
                 }
             }
 
-            // if the difference is less than 0.2, use the closest grade
-            if ($closestDiff < 0.2) {
-                $avgGrade = $closestGrade;
-            } else {
-                // otherwise, round to the nearest possible grade
-                $avgGrade = round($avgGrade, 1);
-            }
-
-            return $avgGrade;
+            return $closestGrade;
         }
 
         public function countAnsweredQuestions($examId) {
