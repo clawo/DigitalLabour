@@ -36,6 +36,9 @@ if (!$exam) {
 $mockExam = $db_controller->getMockExam($examId);
 $module = $db_controller->getModuleById($mockExam['module_id']);
 
+// get average grade
+$averageGrade = $db_controller->getAverageGradeByExam($examId);
+
 // load mock questions for the exam
 $mockQuestions = $db_controller->getMockQuestionsByExam($examId);
 
@@ -52,7 +55,7 @@ if (empty($mockQuestions)) {
     <h1>Aufgaben: <?= htmlspecialchars($module['module_name']) ?></h1>
 
     <div class="section">
-        <strong><h2>Teil A:</h2></strong> <h2>Wissensfragen</h2>
+        <h2>Wissensfragen</h2>
     </div>
 
     <?php foreach ($mockQuestions as $index => $question): ?>
@@ -60,18 +63,17 @@ if (empty($mockQuestions)) {
             <h3><strong>Frage: </strong><?= htmlspecialchars($question['question']) ?></h3>
             <label>Antwort:</label><br>
             <textarea readonly rows="4" cols="60"><?= htmlspecialchars($question['answer'] ?? 'Keine Antwort vorhanden.') ?></textarea>
-            <br>
+            <br><br>
             <label>Bewertung von ChatGPT:</label><br>
             <textarea readonly rows="4" cols="60"><?= htmlspecialchars($question['judgement'] ?? 'Keine Antwort vorhanden.') ?></textarea>
-            <br>
+            <br><br>
             <label>Note:</label><br>
             <textarea readonly rows="1" cols="10"><?= htmlspecialchars($question['grade'] ?? 'Noch keine Note.') ?></textarea>
         </div>
     <?php endforeach; ?>
 
-    <div class="button-container">
-        <button> Weiter </button>
-    </div>
+    <h3>Note: <?= htmlspecialchars($averageGrade) ?></h3>
+
 </div>
 
 <?php include '../includes/footer.php'; ?>
