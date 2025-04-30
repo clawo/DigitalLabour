@@ -52,7 +52,7 @@ if (empty($mockQuestions)) {
 <body>
 
 <div class="contentBody">
-    <h1>Aufgaben: <?= htmlspecialchars($module['module_name']) ?></h1>
+    <h1>Modul: <?= htmlspecialchars($module['module_name']) ?></h1>
 
     <div class="section">
         <h2>Wissensfragen</h2>
