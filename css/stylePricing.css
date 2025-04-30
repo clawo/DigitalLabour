@@ -1,0 +1,161 @@
+/* ===========================
+   GLOBAL
+   =========================== */
+   body {
+    margin: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    color: #333;
+  }
+  .btn {
+    display: inline-block;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .btn-primary {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+  }
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  .btn-outline {
+    background-color: #e6e6e6;
+    border: none;
+    font-weight: bold;
+  }
+  .btn-outline:hover {
+    background-color: #ccc;
+  }
+  
+  /* ===========================
+     HERO
+     =========================== */
+  .hero {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: #f9f9f9;
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  /* ===========================
+     PACKAGES
+     =========================== */
+  .packages {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 60px 20px;
+    flex-wrap: wrap;
+  }
+  .package-card {
+    background-color: #fff;
+    border: 2px dashed #d4b5ff;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    width: 280px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .package-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  .package-card .price {
+    font-size: 2rem;
+    margin: 10px 0;
+  }
+  .package-card .price span {
+    font-size: 1rem;
+    color: #666;
+  }
+  .package-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  /* ===========================
+     TESTIMONIALS
+     =========================== */
+  .testimonials {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    flex-wrap: wrap;
+  }
+  .testimonial {
+    max-width: 280px;
+    text-align: center;
+  }
+  .testimonial h3 {
+    margin-bottom: 5px;
+  }
+  .testimonial .stars {
+    color: #FFD700;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+  }
+  .testimonial p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  /* ===========================
+     FAQ
+     =========================== */
+  .faq {
+    padding: 60px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .faq h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+  }
+  .faq-item {
+    margin-bottom: 20px;
+  }
+  .faq-item h4 {
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+  }
+  .faq-item p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  /* ===========================
+     RESPONSIVE
+     =========================== */
+  @media (max-width: 768px) {
+    .packages, .testimonials {
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero h1 {
+      font-size: 2rem;
+    }
+    .hero p {
+      font-size: 1rem;
+    }
+  }
+  
