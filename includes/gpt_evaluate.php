@@ -95,12 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
 */
 
 // implement test of above functions
-$testQuestion = "Was ist der Unterschied zwischen einem Integer und einem Float in der Programmiersprache PHP?";
-$testAnswer = "Ein Integer ist eine ganze Zahl, während ein Float eine Fließkommazahl ist.";
-$evaluation = evaluateAnswer($testQuestion, $testAnswer);
-$grade = extractGrade($evaluation);
-$feedback = extractFeedback($evaluation);
-echo "Test Evaluation: " . $evaluation . "<br>";
-echo "Test Note: " . $grade . "<br>";
-echo "Test Begründung: " . $feedback . "<br>";
+//$testQuestion = "Was ist der Unterschied zwischen einem Integer und einem Float in der Programmiersprache PHP?";
+//$testAnswer = "Ein Integer ist eine ganze Zahl, während ein Float eine Fließkommazahl ist.";
+//$evaluation = evaluateAnswer($testQuestion, $testAnswer);
+//$grade = extractGrade($evaluation);
+//$feedback = extractFeedback($evaluation);
+//echo "Test Evaluation: " . $evaluation . "<br>";
+//echo "Test Note: " . $grade . "<br>";
+//echo "Test Begründung: " . $feedback . "<br>";
 ?>
