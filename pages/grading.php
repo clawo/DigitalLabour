@@ -73,7 +73,6 @@ if (empty($mockQuestions)) {
     <?php endforeach; ?>
 
     <h3>Note: <?= htmlspecialchars($averageGrade) ?></h3>
-
 </div>
 
 <?php include '../includes/footer.php'; ?>
