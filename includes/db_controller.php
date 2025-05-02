@@ -402,23 +402,68 @@
  * @param int $createdBy The user ID of the creator
  * @return int|bool The ID of the new module on success, false on failure
  */
+/**
+ * Creates a new module in the database with debugging
+ * 
+ * @param string $moduleName The technical name of the module
+ * @param string $moduleLabel The display name of the module
+ * @param int $createdBy The user ID of the creator
+ * @return int|bool The ID of the new module on success, false on failure
+ */
 public function createModule($moduleName, $moduleLabel, $createdBy) {
     try {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO modules (module_name, module_label, created_by, created_at)
-            VALUES (?, ?, ?, NOW())
-        ");
+        // Debug output
+        echo '<script>console.log("Creating module with: ' . 
+            'moduleName=' . $moduleName . ', ' . 
+            'moduleLabel=' . $moduleLabel . ', ' . 
+            'createdBy=' . $createdBy . '");</script>';
         
-        $success = $stmt->execute([$moduleName, $moduleLabel, $createdBy]);
-        
-        if ($success) {
-            return $this->pdo->lastInsertId();
+        // Check DB connection
+        if (!$this->pdo) {
+            echo '<script>console.error("Database connection is null!");</script>';
+            return false;
         }
         
-        return false;
+        // Prepare SQL statement
+        $sql = "INSERT INTO modules (module_name, module_label, created_by, created_at) VALUES (?, ?, ?, NOW())";
+        echo '<script>console.log("SQL: ' . $sql . '");</script>';
+        
+        $stmt = $this->pdo->prepare($sql);
+        if (!$stmt) {
+            echo '<script>console.error("Failed to prepare statement: ' . 
+                json_encode($this->pdo->errorInfo()) . '");</script>';
+            return false;
+        }
+        
+        // Execute with parameters
+        $params = [$moduleName, $moduleLabel, $createdBy];
+        echo '<script>console.log("Parameters: ' . json_encode($params) . '");</script>';
+        
+        $success = $stmt->execute($params);
+        
+        // Check execution result
+        if (!$success) {
+            echo '<script>console.error("Execute failed: ' . 
+                json_encode($stmt->errorInfo()) . '");</script>';
+            return false;
+        }
+        
+        // Get the new ID
+        $newId = $this->pdo->lastInsertId();
+        echo '<script>console.log("New module ID: ' . $newId . '");</script>';
+        
+        return $newId;
     } catch (PDOException $e) {
-        // Log error
-        error_log("Error creating module: " . $e->getMessage());
+        // Log detailed error
+        $errorMessage = "Error creating module: " . $e->getMessage();
+        echo '<script>console.error(' . json_encode($errorMessage) . ');</script>';
+        error_log($errorMessage);
+        return false;
+    } catch (Exception $e) {
+        // Catch any other exceptions
+        $errorMessage = "Unexpected error: " . $e->getMessage();
+        echo '<script>console.error(' . json_encode($errorMessage) . ');</script>';
+        error_log($errorMessage);
         return false;
     }
 }
