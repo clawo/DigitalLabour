@@ -38,14 +38,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
             <input type="hidden" name="sortierung" value="<?= htmlspecialchars($sortierung) ?>">
             <button type="submit"><i class="fas fa-search"></i></button>
         </form>
-        
-        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role_id'] === 1): ?>
-        <div class="action-buttons">
-            <a href="pages/create_questions.php" class="button create-questions-btn">
-                Prüfungsfragen erstellen
-            </a>
-        </div>
-        <?php endif; ?>
     </section>
 
     <!-- ==========================
@@ -78,10 +70,6 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
                         <a href="pages/createModule.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">
                             Fragen bearbeiten
                         </a>
-                        <div class="divider"></div>
-                        <a href="pages/create_questions.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">
-                            Fragen hinzufügen
-                        </a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -93,23 +81,11 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
     <!-- ++++++++++++++++++++++++++++++++ -->
 
 <?php if ($_SESSION['user']['role_id'] === 1): ?>
-    <!-- ?new=1 signalisiert „Erstellen" -->
+    <!-- ?new=1 signalisiert „Erstellen“ -->
     <a href="pages/createModule.php?new=1"
        class="modul-card modul-card--add"
        title="Neues Modul anlegen">
         <span class="plus-icon">+</span>
-    </a>
-    
-    <!-- Button für Prüfungsfragen, im selben Stil wie die Plus-Karte -->
-    <a href="pages/create_questions.php"
-       class="modul-card modul-card--questions"
-       title="Prüfungsfragen erstellen">
-        <div class="questions-icon">
-            <span class="icon-text">Q</span>
-        </div>
-        <div class="modul-info text-center">
-            <h3>Prüfungsfragen erstellen</h3>
-        </div>
     </a>
 <?php endif; ?>
 
@@ -119,58 +95,5 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
 </section>
 
 </main>
-
-<style>
-    /* Styling für den zusätzlichen Prüfungsfragen-Button in der Filter-Bar */
-    .action-buttons {
-        margin-left: 20px;
-    }
-    
-    .create-questions-btn {
-        background-color: #1e2a38;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 4px;
-        text-decoration: none;
-    }
-    
-    .create-questions-btn:hover {
-        background-color: #2e3e50;
-    }
-    
-    /* Styling für die Prüfungsfragen-Karte */
-    .modul-card--questions {
-        background-color: #f0f4f8;
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-    
-    .modul-card--questions:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    
-    .questions-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background-color: #1e2a38;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        margin-bottom: 15px;
-    }
-    
-    .text-center {
-        text-align: center;
-    }
-</style>
 
 <?php include 'includes/footer.php'; ?>
