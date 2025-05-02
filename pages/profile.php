@@ -5,7 +5,7 @@
     <?php include '../includes/htmlHead.php'; ?>
     <title>Mein Profil - Prüfungsübersicht</title>
     <style>
-        .profile-container {
+        .contentBody {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
@@ -44,12 +44,9 @@
             float: right;
             font-weight: bold;
         }
-        .grade-1 { color: #5cb85c; }
-        .grade-2 { color: #5cb85c; }
-        .grade-3 { color: #f0ad4e; }
-        .grade-4 { color: #f0ad4e; }
-        .grade-5 { color: #d9534f; }
-        .grade-6 { color: #d9534f; }
+        .grade-1, .grade-2 { color: #5cb85c; }
+        .grade-3, .grade-4 { color: #f0ad4e; }
+        .grade-5, .grade-6 { color: #d9534f; }
         .question-item {
             padding: 15px;
             margin-bottom: 15px;
@@ -62,8 +59,12 @@
             clear: both;
             display: table;
         }
-        h3 {
-            margin-top: 0;
+        .section {
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .no-exams {
             padding: 20px;
@@ -80,48 +81,52 @@
 
 <?php include '../includes/header.php'; ?>
 
+<?php
+require_once '../includes/db_controller.php';
+
+if (!isset($_SESSION['user'])) {
+    echo '<script>window.location.href = "../index.php";</script>';
+    exit;
+}
+
+$db_controller = new DatabaseController();
+$userId = $_SESSION['user']['user_id'];
+
+// Get user's exams
+$userExams = $db_controller->getExamsByUser($userId);
+
+// Get exam details if an exam is selected
+$selectedExam = null;
+$examQuestions = [];
+$module = null;
+
+if (isset($_GET['exam_id']) && !empty($_GET['exam_id'])) {
+    $examId = $_GET['exam_id'];
+    
+    // Check if the exam belongs to the user
+    $exam = $db_controller->checkUserExamAccess($userId, $examId);
+    if (!$exam) {
+        echo '<script>alert("Zugriff auf diese Prüfung nicht erlaubt."); window.location.href="../index.php";</script>';
+        exit;
+    }
+    
+    $selectedExam = $db_controller->getMockExam($examId);
+    if ($selectedExam) {
+        $module = $db_controller->getModuleById($selectedExam['module_id']);
+        $examQuestions = $db_controller->getMockQuestionsByExam($examId);
+        $averageGrade = $db_controller->getAverageGradeByExam($examId);
+    }
+}
+?>
+
 <body>
-    <div class="profile-container">
-        <h2>Mein Profil - Prüfungsübersicht</h2>
+    <div class="contentBody">
+        <h1>Mein Profil - Prüfungsübersicht</h1>
         
-        <?php
-        // Start session if not already started
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        // Check if user is logged in
-        if (!isset($_SESSION['user']) || empty($_SESSION['user']['user_id'])) {
-            echo '<div class="no-exams">
-                <p>Bitte melden Sie sich an, um Ihre Prüfungen zu sehen.</p>
-                <p><a href="login.php">Zum Login</a></p>
-            </div>';
-        } else {
-            // Include database controller
-            require_once('db_connect.php');
-            $controller = new DatabaseController();
-            $userId = $_SESSION['user']['user_id'];
-            
-            // Get user's exams
-            $userExams = $controller->getExamsByUser($userId);
-            
-            // Get exam details if an exam is selected
-            $selectedExam = null;
-            $examQuestions = [];
-            if (isset($_GET['exam_id']) && !empty($_GET['exam_id'])) {
-                $examId = $_GET['exam_id'];
-                $selectedExam = $controller->getMockExam($examId);
-                
-                // Make sure the exam belongs to the current user
-                if ($selectedExam && $selectedExam['user_id'] == $userId) {
-                    $examQuestions = $controller->getMockQuestionsByExam($examId);
-                }
-            }
-            ?>
-            
-            <div class="clearfix">
-                <div class="exams-list">
-                    <h3>Meine Prüfungen</h3>
+        <div class="clearfix">
+            <div class="exams-list">
+                <div class="section">
+                    <h2>Meine Prüfungen</h2>
                     
                     <?php if (empty($userExams)): ?>
                         <div class="no-exams">
@@ -143,59 +148,50 @@
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
-                
-                <div class="exam-details">
-                    <?php if ($selectedExam): ?>
-                        <h3>
-                            Prüfungsdetails: 
-                            <?php 
-                            $moduleName = $selectedExam['module_name'] ?? '';
-                            if (empty($moduleName) && !empty($selectedExam['module_id'])) {
-                                $module = $controller->getModuleById($selectedExam['module_id']);
-                                $moduleName = $module['module_name'] ?? $module['module_label'] ?? 'Unbekanntes Modul';
-                            }
-                            echo htmlspecialchars($moduleName);
-                            ?>
-                            <span class="grade grade-<?php echo (int)$selectedExam['grade']; ?>">
-                                <?php echo number_format($selectedExam['grade'], 1); ?>
-                            </span>
-                        </h3>
-                        
-                        <?php if (empty($examQuestions)): ?>
-                            <p>Keine Fragen für diese Prüfung gefunden.</p>
-                        <?php else: ?>
-                            <?php foreach ($examQuestions as $index => $question): ?>
-                                <div class="question-item">
-                                    <h4>Frage <?php echo $index + 1; ?>:</h4>
-                                    <p><?php echo htmlspecialchars($question['question']); ?></p>
-                                    
-                                    <h5>Ihre Antwort:</h5>
-                                    <p><?php echo nl2br(htmlspecialchars($question['answer'])); ?></p>
-                                    
-                                    <?php if (!empty($question['judgement'])): ?>
-                                        <h5>Feedback:</h5>
-                                        <p><?php echo nl2br(htmlspecialchars($question['judgement'])); ?></p>
-                                        
-                                        <h5>Note:</h5>
-                                        <p class="grade grade-<?php echo (int)$question['grade']; ?>">
-                                            <?php echo number_format($question['grade'], 1); ?>
-                                        </p>
-                                    <?php else: ?>
-                                        <p><em>Diese Antwort wurde noch nicht bewertet.</em></p>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    <?php else: ?>
-                        <div class="no-exams">
-                            <p>Bitte wählen Sie eine Prüfung aus der Liste, um die Details anzuzeigen.</p>
-                        </div>
-                    <?php endif; ?>
-                </div>
             </div>
-        <?php
-        }
-        ?>
+            
+            <div class="exam-details">
+                <?php if ($selectedExam && $module): ?>
+                    <div class="section">
+                        <h2>Modul: <?= htmlspecialchars($module['module_name']) ?></h2>
+                        <h3>Note: <?= htmlspecialchars(number_format($averageGrade, 1)) ?></h3>
+                    </div>
+                    
+                    <?php if (empty($examQuestions)): ?>
+                        <div class="section">
+                            <p>Keine Fragen für diese Prüfung gefunden.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="section">
+                            <h2>Prüfungsfragen</h2>
+                        </div>
+                        
+                        <?php foreach ($examQuestions as $index => $question): ?>
+                            <div class="section question">
+                                <h3><strong>Frage: </strong><?= htmlspecialchars($question['question']) ?></h3>
+                                <label>Antwort:</label><br>
+                                <textarea readonly rows="4" cols="60"><?= htmlspecialchars($question['answer'] ?? 'Keine Antwort vorhanden.') ?></textarea>
+                                <br><br>
+                                <?php if (!empty($question['judgement'])): ?>
+                                    <label>Bewertung:</label><br>
+                                    <textarea readonly rows="4" cols="60"><?= htmlspecialchars($question['judgement']) ?></textarea>
+                                    <br><br>
+                                    <label>Note:</label><br>
+                                    <textarea readonly rows="1" cols="10"><?= htmlspecialchars($question['grade']) ?></textarea>
+                                <?php else: ?>
+                                    <p><em>Diese Antwort wurde noch nicht bewertet.</em></p>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <div class="section">
+                        <h2>Prüfungsdetails</h2>
+                        <p>Bitte wählen Sie eine Prüfung aus der Liste, um die Details anzuzeigen.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </body>
 
