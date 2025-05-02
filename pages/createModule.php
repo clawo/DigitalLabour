@@ -3,7 +3,7 @@
 
 <head>
     <?php include '../includes/htmlHead.php'; ?>
-    <title>Grading with ChatGPT</title>
+    <title>Module verwalten</title>
 </head>
 
 <?php include '../includes/header.php'; ?>
@@ -13,14 +13,15 @@ require_once '../includes/db_controller.php';
 
 $db = new DatabaseController();
 
-// Check if user is logged in
+// check if user is logged in
 if (!isset($_SESSION['user'])) {
     echo '<script>window.location.href = "../index.php";</script>';
     exit();
 }
 
-// Check if existing module ID is passed
+// check if existing module ID is passed
 $moduleId = $_GET['module_id'] ?? null;
+$module = null;
 if ($moduleId) {
     $moduleId = (int)$moduleId;
     if ($moduleId <= 0) {
@@ -38,16 +39,33 @@ if ($moduleId) {
     exit();
 }
 
-// Check if user is allowed to edit
+// check if user is allowed to edit
 $moduleCreatedByUser = $db->checkModuleCreatedByUser($moduleId, $_SESSION['user']['user_id']);
 if ($_SESSION['user']['role_id'] !== 1 || !$moduleCreatedByUser) {
     echo '<script>alert("Zugriff auf diese Seite nicht erlaubt."); window.location.href = "../index.php";</script>';
     exit();
 }
 
-// Handle AJAX POST
+// get module creator
+$moduleCreator = $db->getUserById($module['created_by']);
+
+// handle AJAX POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
+
+    if ($action === 'create') {
+        $moduleId = (int)($_POST['module_id'] ?? 0);
+        $text = trim($_POST['frage'] ?? '');
+        if ($moduleId > 0) {
+            $newQuestionId = $db->addQuestion($moduleId, $text);
+            if ($newQuestionId) {
+                echo json_encode(['success' => true, 'question_id' => $newQuestionId]);
+                exit();
+            }
+        }
+        echo json_encode(['success' => false, 'error' => 'Erstellung fehlgeschlagen.']);
+        exit();
+    }
 
     if ($action === 'save') {
         $questionId = (int)($_POST['question_id'] ?? 0);
@@ -69,7 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Wenn kein gültiger action vorhanden ist:
     echo json_encode(['success' => false, 'error' => 'Ungültige Anfrage.']);
     exit();
 }
@@ -81,8 +98,8 @@ $questions = $db->getQuestionsByModule($moduleId);
 <body>
 <div class="containerbody">
     <div>
-        <h1>GRUNDLAGEN DER INFORMATIK</h1>
-        <p>Prof. Dr. Kamyar Sarshar</p>
+        <h1><?= htmlspecialchars($module['module_label']) ?></h1>
+        <p>Angelegt von: <?= htmlspecialchars($moduleCreator['first_name'] . ' ' . $moduleCreator['last_name']) ?></p>
     </div>
 
     <div class="search-bar">
@@ -112,7 +129,8 @@ $questions = $db->getQuestionsByModule($moduleId);
             <textarea id="frage" rows="10" placeholder="Fragetext..."></textarea>
             <div class="editor-buttons">
                 <button class="delete">AUFGABE LÖSCHEN</button>
-                <button class="save">SPEICHERN</button>
+                <button id="save-btn" class="save" style="display: none;">SPEICHERN</button>
+                <button id="create-btn" class="save">FRAGE ERSTELLEN</button>
             </div>
         </div>
     </div>
@@ -125,9 +143,39 @@ $questions = $db->getQuestionsByModule($moduleId);
         selectedQuestionId = id;
         document.getElementById('titel').value = "Frage #" + id;
         document.getElementById('frage').value = frageText;
+
+        document.getElementById('save-btn').style.display = 'inline-block';
+        document.getElementById('create-btn').style.display = 'none';
     }
 
-    document.querySelector('.save').addEventListener('click', function () {
+    document.getElementById('create-btn').addEventListener('click', function () {
+        const frage = document.getElementById('frage').value;
+
+        if (!frage.trim()) {
+            alert('Bitte gib einen Fragetext ein.');
+            return;
+        }
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'create',
+                module_id: <?= (int)$moduleId ?>,
+                frage: frage
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.question_id) {
+                    window.location.reload();
+                } else {
+                    alert('Erstellung fehlgeschlagen.');
+                }
+            });
+    });
+
+    document.getElementById('save-btn').addEventListener('click', function () {
         if (!selectedQuestionId) {
             alert('Bitte wähle zuerst eine Aufgabe aus.');
             return;

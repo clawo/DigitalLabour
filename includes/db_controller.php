@@ -220,6 +220,15 @@
 
 
         // ===== QUESTIONS =====
+        public function addQuestion($moduleId, $questionText) {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO questions (module_id, question)
+                VALUES (?, ?)
+            ");
+            $stmt->execute([$moduleId, $questionText]);
+            return $this->pdo->lastInsertId();
+        }
+
         public function updateQuestion($questionId, $newQuestionText) {
             $stmt = $this->pdo->prepare("UPDATE questions SET question = ? WHERE question_id = ?");
             return $stmt->execute([$newQuestionText, $questionId]);

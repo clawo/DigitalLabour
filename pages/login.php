@@ -1,5 +1,11 @@
 <?php
 require_once '../includes/header.php';
+
+// if the user is already logged in, redirect to the index page
+if (isset($_SESSION['user'])) {
+    echo '<script>window.location.href = "../index.php";</script>';
+    exit;
+}
 ?>
 <!-- ==========================
      Login-Bereich
