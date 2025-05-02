@@ -41,7 +41,9 @@ if ($moduleId) {
 
 // check if user is allowed to edit
 
-if ($_SESSION['user']['role_id'] !== 1 || !$moduleCreatedByUser) {
+
+// ---------- new access check ----------
+if ($_SESSION['user']['role_id'] !== 1) {
     echo '<script>alert("Zugriff auf diese Seite nicht erlaubt."); window.location.href = "../index.php";</script>';
     exit();
 }
