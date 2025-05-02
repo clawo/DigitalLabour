@@ -5,6 +5,11 @@
     <?php if (!$createMode): ?>
         <p>Angelegt von: <?= htmlspecialchars($moduleCreator['first_name'].' '.$moduleCreator['last_name']) ?></p>
     <?php endif; ?>
+    <?php if (!$createMode): ?>
+        <div class="search-bar">
+            <input type="text" placeholder="Fragen durchsuchen">
+        </div>
+    <?php endif; ?>
 
     <div class="container">
 
@@ -76,7 +81,9 @@
         document.getElementById('create-btn').style.display = 'none';
     }
 
-    document.getElementById('create-btn').addEventListener('click', function () {
+    const createBtn = document.getElementById('create-btn');
+    if (createBtn) {
+        createBtn.addEventListener('click', function () {
         const frage = document.getElementById('frage').value;
 
         if (!frage.trim()) {
@@ -96,9 +103,12 @@
             .then(function () {
                 window.location.reload();
             });
-    });
+        });
+    }
 
-    document.getElementById('save-btn').addEventListener('click', function () {
+    const saveBtn = document.getElementById('save-btn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function () {
         if (!selectedQuestionId) {
             alert('Bitte wähle zuerst eine Aufgabe aus.');
             return;
@@ -116,9 +126,12 @@
         }).then(function () {
             window.location.reload();
         });
-    });
+        });
+    }
 
-    document.querySelector('.delete').addEventListener('click', function () {
+    const deleteBtn = document.querySelector('.delete');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function () {
         if (!selectedQuestionId) {
             alert('Bitte wähle zuerst eine Aufgabe aus.');
             return;
@@ -137,21 +150,25 @@
         }).then(function () {
             window.location.reload();
         });
-    });
-
-    document.querySelector('.search-bar input').addEventListener('input', function () {
-        const searchTerm = this.value.toLowerCase();
-        const tasks = document.querySelectorAll('.task');
-
-        tasks.forEach(task => {
-            const text = task.textContent.toLowerCase();
-            if (text.includes(searchTerm)) {
-                task.style.display = 'block';
-            } else {
-                task.style.display = 'none';
-            }
         });
-    });
+    }
+
+    const searchInput = document.querySelector('.search-bar input');
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const tasks = document.querySelectorAll('.task');
+
+            tasks.forEach(task => {
+                const text = task.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    task.style.display = 'block';
+                } else {
+                    task.style.display = 'none';
+                }
+            });
+        });
+    }
 </script>
 
 </body>

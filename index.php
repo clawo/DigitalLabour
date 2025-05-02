@@ -79,11 +79,15 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
     <!-- ++++++++++++++++++++++++++++++++ -->
     <!--  PLUS‑KARTE  (nur für Dozenten)  -->
     <!-- ++++++++++++++++++++++++++++++++ -->
-    <?php if ($_SESSION['user']['role_id'] === 1): ?>
-        <a href="pages/createModule.php" class="modul-card modul-card--add" title="Neues Modul anlegen">
-            <span class="plus-icon">+</span>
-        </a>
-    <?php endif; ?>
+
+<?php if ($_SESSION['user']['role_id'] === 1): ?>
+    <!-- ?new=1 signalisiert „Erstellen“ -->
+    <a href="pages/createModule.php?new=1"
+       class="modul-card modul-card--add"
+       title="Neues Modul anlegen">
+        <span class="plus-icon">+</span>
+    </a>
+<?php endif; ?>
 
     <?php if (empty($modules)): ?>
         <p>Keine Module gefunden oder nicht eingeloggt.</p>
