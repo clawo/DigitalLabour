@@ -57,14 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $moduleId = (int)($_POST['module_id'] ?? 0);
         $text = trim($_POST['frage'] ?? '');
         if ($moduleId > 0) {
-            $newQuestionId = $db->addQuestion($moduleId, $text);
-            if ($newQuestionId) {
-                echo json_encode(['success' => true, 'question_id' => $newQuestionId]);
-                exit();
-            }
+            $success = $db->addQuestion($moduleId, $text);
+
+            echo json_encode(['success' => $success]);
+            exit();
         }
-        echo json_encode(['success' => false, 'error' => 'Erstellung fehlgeschlagen.']);
-        exit();
     }
 
     if ($action === 'save') {
@@ -165,13 +162,8 @@ $questions = $db->getQuestionsByModule($moduleId);
                 frage: frage
             })
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.question_id) {
-                    window.location.reload();
-                } else {
-                    alert('Erstellung fehlgeschlagen.');
-                }
+            .then(function () {
+                window.location.reload();
             });
     });
 
