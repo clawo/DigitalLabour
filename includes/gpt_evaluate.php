@@ -1,21 +1,18 @@
 <?php
 function getApiKey() {
     $env = parse_ini_file('/var/www/vhosts/examwise.eu/.env');
-    return $env['OPENAI_API_KEY'];
+    return $env['OPENAI_API_KEY'] ?? null;
 }
 
 // API-Aufruf an OpenAI
 function evaluateAnswer($question, $answer) {
-    $apiUrl = 'https://api.openai.com/v1/completions';
-    echo '<script>console.log("Lade API-Key");</script>';
+    $apiUrl = 'https://api.openai.com/v1/chat/completions';
     $apiKey = getApiKey();
 
     // check if API key is set
     if (empty($apiKey)) {
         return 'API-Schlüssel nicht gesetzt.';
     }
-
-    echo '<script>console.log("API-Key: geladen");</script>';
 
     // Erstellen des Prompts
     $prompt = "Bewerte die folgende Antwort auf die Frage nach dem deutschen Notensystem mit den Noten (1.0, 1.3, 1.7, 2.0, ..., 6.0). Gib das Ergebnis bitte in **diesem strukturierten Format** aus:
@@ -28,15 +25,17 @@ function evaluateAnswer($question, $answer) {
 
     Antwort: $answer";
 
-    echo '<script>console.log("Prompt: erstellt");</script>';
-
     // API-Daten
     $postData = [
         'model' => 'gpt-3.5-turbo',
-        'prompt' => $prompt,
+        'messages' => [
+            ['role' => 'system', 'content' => 'Du bist ein Bewertungssystem für Prüfungsantworten.'],
+            ['role' => 'user', 'content' => $prompt]
+        ],
         'max_tokens' => 300,
         'temperature' => 0.7,
     ];
+
 
     // HTTP-Stream-Context für den POST-Aufruf
     $contextOptions = [
@@ -50,31 +49,26 @@ function evaluateAnswer($question, $answer) {
         ],
     ];
 
-    echo '<script>console.log("HTTP-Stream-Context: erstellt");</script>';
-
     $context = stream_context_create($contextOptions);
 
-    echo '<script>console.log("Stream-Context: erstellt");</script>';
     $response = file_get_contents($apiUrl, false, $context);
-
-    echo '<script>console.log("API-Antwort: ' . $response . '");</script>';
 
     if ($response === FALSE) {
         return 'Fehler bei der API-Anfrage.';
     }
 
     $responseData = json_decode($response, true);
-    return $responseData['choices'][0]['text'] ?? 'Keine Antwort erhalten.';
+    return $responseData['choices'][0]['message']['content'] ?? 'Keine Antwort erhalten.';
 }
 
 // Note und Begründung extrahieren
 function extractGrade($evaluation) {
-    preg_match('/**Note:**\s*([0-9]+\.[0-9])/', $evaluation, $matches);
+    preg_match('/\*\*Note:\*\*\s*([0-9]+\.[0-9])/', $evaluation, $matches);
     return $matches[1] ?? 'Keine Note gefunden';
 }
 
 function extractFeedback($evaluation) {
-    preg_match('/**Begründung & Verbesserung:**\s*(.*)/', $evaluation, $matches);
+    preg_match('/\*\*Begründung & Verbesserung:\*\*\s*(.*)/', $evaluation, $matches);
     return $matches[1] ?? 'Keine Begründung gefunden';
 }
 
@@ -99,4 +93,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
     echo "Begründung & Verbesserung: " . $feedback . "<br>";
 }
 */
+
+// implement test of above functions
+//$testQuestion = "Was ist der Unterschied zwischen einem Integer und einem Float in der Programmiersprache PHP?";
+//$testAnswer = "Ein Integer ist eine ganze Zahl, während ein Float eine Fließkommazahl ist.";
+//$evaluation = evaluateAnswer($testQuestion, $testAnswer);
+//$grade = extractGrade($evaluation);
+//$feedback = extractFeedback($evaluation);
+//echo "Test Evaluation: " . $evaluation . "<br>";
+//echo "Test Note: " . $grade . "<br>";
+//echo "Test Begründung: " . $feedback . "<br>";
 ?>

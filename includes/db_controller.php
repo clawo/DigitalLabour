@@ -441,7 +441,22 @@
                 WHERE exam_id = ?
             ");
             $stmt->execute([$examId]);
-            return $stmt->fetchColumn();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $avgGrade = round($result['avg_grade'], 1);
+
+            $possibleGrades = [1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, 4.3, 4.7, 5.0];
+            $closestGrade = null;
+            $closestDiff = PHP_INT_MAX;
+            foreach ($possibleGrades as $grade) {
+                $diff = abs($avgGrade - $grade);
+                if ($diff < $closestDiff) {
+                    $closestDiff = $diff;
+                    $closestGrade = $grade;
+                }
+            }
+
+            return $closestGrade;
         }
 
         public function countAnsweredQuestions($examId) {
