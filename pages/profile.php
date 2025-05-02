@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <?php include '../includes/htmlHead.php'; ?>
+    <title>Grading with ChatGPT</title>
+</head>
 <?php
 // Start session if not already started
 if (session_status() == PHP_SESSION_NONE) {
@@ -28,9 +35,6 @@ if (isset($_GET['exam_id']) && !empty($_GET['exam_id'])) {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="de">
-
 <head>
     <?php include '../includes/htmlHead.php'; ?>
     <title>Mein Profil - Prüfungsübersicht</title>
