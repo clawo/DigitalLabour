@@ -3,7 +3,7 @@
  
 <head>
     <?php include '../includes/htmlHead.php'; ?>
-    <title>Fragen erstellen</title>
+    <title>Module erstellen</title>
 </head>
  
 <?php include '../includes/header.php'; ?>
@@ -19,389 +19,305 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
  
-// check if user is allowed to edit
+// check if user is allowed to create modules (only role_id 1 - teachers/dozenten)
 if ($_SESSION['user']['role_id'] !== 1) {
     echo '<script>alert("Zugriff auf diese Seite nicht erlaubt."); window.location.href = "../index.php";</script>';
     exit();
 }
 
-// Load all available modules for selection
-$allModules = $db->getAllModules();
+// For creating modules, we'll need to add a method to the DatabaseController class
+// Let's modify our approach to be more compatible with the existing code
+
+// The user needs to implement this function in the DatabaseController class
+// This is just a placeholder - we're referencing the function that needs to be added
+/*
+// Add this method to DatabaseController class:
+public function createModule($data) {
+    $stmt = $this->pdo->prepare("
+        INSERT INTO modules (module_name, module_label, created_by, created_at)
+        VALUES (?, ?, ?, NOW())
+    ");
+    $success = $stmt->execute([
+        $data['module_name'],
+        $data['module_label'],
+        $data['created_by']
+    ]);
+    
+    if ($success) {
+        return $this->pdo->lastInsertId();
+    }
+    
+    return false;
+}
+*/
 
 // handle AJAX POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
  
-    if ($action === 'create') {
-        $moduleId = (int)($_POST['module_id'] ?? 0);
-        $text = trim($_POST['frage'] ?? '');
-        if ($moduleId > 0 && $text !== '') {
-            $success = $db->addQuestion($moduleId, $text);
-            echo json_encode(['success' => $success]);
-            exit();
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Bitte wähle ein Modul aus und gib einen Fragetext ein.']);
+    if ($action === 'createModule') {
+        $moduleName = trim($_POST['module_name'] ?? '');
+        $moduleLabel = trim($_POST['module_label'] ?? '');
+        $createdBy = $_SESSION['user']['user_id'];
+        
+        if (empty($moduleName) || empty($moduleLabel)) {
+            echo json_encode(['success' => false, 'error' => 'Bitte alle Pflichtfelder ausfüllen.']);
             exit();
         }
-    }
- 
-    if ($action === 'save') {
-        $questionId = (int)($_POST['question_id'] ?? 0);
-        $moduleId = (int)($_POST['module_id'] ?? 0);
-        $newText = trim($_POST['frage'] ?? '');
-        if ($questionId > 0 && $moduleId > 0 && $newText !== '') {
-            $success = $db->updateQuestion($questionId, $newText);
-            echo json_encode(['success' => $success]);
-            exit();
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Ungültige Daten.']);
-            exit();
-        }
-    }
- 
-    if ($action === 'delete') {
-        $questionId = (int)($_POST['question_id'] ?? 0);
-        if ($questionId > 0) {
-            $success = $db->deleteQuestion($questionId);
-            echo json_encode(['success' => $success]);
-            exit();
-        }
-    }
-    
-    if ($action === 'loadQuestions') {
-        $moduleId = (int)($_POST['module_id'] ?? 0);
-        if ($moduleId > 0) {
-            $questions = $db->getQuestionsByModule($moduleId);
-            echo json_encode(['success' => true, 'questions' => $questions]);
-            exit();
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Kein Modul ausgewählt.']);
-            exit();
-        }
-    }
-    
-    if ($action === 'getModuleInfo') {
-        $moduleId = (int)($_POST['module_id'] ?? 0);
-        if ($moduleId > 0) {
-            $module = $db->getModuleById($moduleId);
-            if ($module && isset($module['created_by'])) {
-                $creator = $db->getUserById($module['created_by']);
-                $creatorName = $creator ? $creator['first_name'] . ' ' . $creator['last_name'] : 'Unbekannt';
-                echo json_encode(['success' => true, 'creatorName' => $creatorName]);
-                exit();
+        
+        $moduleData = [
+            'module_name' => $moduleName,
+            'module_label' => $moduleLabel,
+            'created_by' => $createdBy
+        ];
+        
+        try {
+            // Direct database query since we don't have a createModule method yet
+            $stmt = getDB()->prepare("
+                INSERT INTO modules (module_name, module_label, created_by, created_at)
+                VALUES (?, ?, ?, NOW())
+            ");
+            
+            $success = $stmt->execute([
+                $moduleData['module_name'],
+                $moduleData['module_label'],
+                $moduleData['created_by']
+            ]);
+            
+            if ($success) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Fehler beim Erstellen des Moduls.']);
             }
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'error' => 'Datenbankfehler: ' . $e->getMessage()]);
         }
-        echo json_encode(['success' => false, 'error' => 'Modulinformationen nicht verfügbar.']);
         exit();
     }
- 
+    
+    if ($action === 'getAllModules') {
+        $modules = $db->getAllModules();
+        echo json_encode(['success' => true, 'modules' => $modules]);
+        exit();
+    }
+    
     echo json_encode(['success' => false, 'error' => 'Ungültige Anfrage.']);
     exit();
 }
+
+// Load all modules for display
+$allModules = $db->getAllModules();
 ?>
  
 <body>
 <div class="containerbody">
     <div>
-        <h1>Fragen erstellen</h1>
+        <h1>Module erstellen</h1>
+        <p>Hier können Sie neue Module erstellen und vorhandene Module ansehen.</p>
     </div>
     
-    <div class="module-selection">
-        <label for="module-select">Modul auswählen:</label>
-        <select id="module-select">
-            <option value="">-- Bitte wählen --</option>
-            <?php foreach ($allModules as $module): ?>
-                <option value="<?= (int)$module['module_id'] ?>">
-                    <?= htmlspecialchars($module['module_label']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <div id="module-info" style="display: none;">
-            <p>Ausgewähltes Modul: <span id="selected-module-name"></span></p>
-            <p>Angelegt von: <span id="module-creator"></span></p>
-        </div>
-    </div>
- 
-    <div class="search-bar">
-        <input type="text" placeholder="Fragen durchsuchen">
-    </div>
- 
     <div class="container">
-        <!-- Aufgaben-Liste -->
-        <div class="panel" id="task-panel">
-            <h2>WÄHLEN SIE EINE AUFGABE AUS</h2>
-            <div id="questions-container">
-                <p id="no-module-selected">Bitte wählen Sie zuerst ein Modul aus.</p>
-                <!-- Questions will be loaded dynamically here -->
+        <!-- Modul-Liste -->
+        <div class="panel" id="modules-panel">
+            <h2>VORHANDENE MODULE</h2>
+            <div id="modules-container">
+                <?php if (empty($allModules)): ?>
+                    <p>Keine Module vorhanden.</p>
+                <?php else: ?>
+                    <?php foreach ($allModules as $module): ?>
+                        <div class="module-item">
+                            <h3><?= htmlspecialchars($module['module_label']) ?></h3>
+                            <p>ID: <?= htmlspecialchars($module['module_id']) ?></p>
+                            <p>Name: <?= htmlspecialchars($module['module_name']) ?></p>
+                            <?php if (isset($module['created_at'])): ?>
+                                <p>Erstellt am: <?= htmlspecialchars($module['created_at']) ?></p>
+                            <?php endif; ?>
+                            <a href="manage_module.php?module_id=<?= (int)$module['module_id'] ?>" class="edit-button">Bearbeiten</a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
  
         <!-- Editor -->
         <div class="panel editor">
-            <h2>EDITOR</h2>
-            <label for="titel">TITEL BEARBEITEN</label>
-            <input type="text" id="titel" placeholder="Titel der Frage..." readonly>
-            <label for="frage">FRAGE BEARBEITEN</label>
-            <textarea id="frage" rows="10" placeholder="Fragetext..."></textarea>
-            <div class="editor-buttons">
-                <button class="delete" disabled>AUFGABE LÖSCHEN</button>
-                <button id="save-btn" class="save" style="display: none;">SPEICHERN</button>
-                <button id="create-btn" class="save" disabled>FRAGE ERSTELLEN</button>
-            </div>
+            <h2>NEUES MODUL ERSTELLEN</h2>
+            <form id="module-form">
+                <div class="form-group">
+                    <label for="module_name">MODULE NAME (Technischer Name)</label>
+                    <input type="text" id="module_name" name="module_name" placeholder="z.B. math_101" required>
+                    <p class="help-text">Technischer Name des Moduls (ohne Leerzeichen, nur Buchstaben, Zahlen und Unterstriche)</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="module_label">MODULE TITEL (Anzeigename)</label>
+                    <input type="text" id="module_label" name="module_label" placeholder="z.B. Mathematik Grundlagen" required>
+                    <p class="help-text">Titel des Moduls, wie er den Benutzern angezeigt wird</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>AUTOR</label>
+                    <input type="text" value="<?= htmlspecialchars($_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name']) ?>" disabled>
+                    <p class="help-text">Dieses Modul wird unter Ihrem Namen erstellt</p>
+                </div>
+                
+                <div class="editor-buttons">
+                    <button type="submit" id="create-module-btn" class="save">MODUL ERSTELLEN</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<style>
+.module-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.module-item h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.help-text {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.edit-button {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.edit-button:hover {
+    background-color: #45a049;
+}
+</style>
  
 <script>
-    let selectedQuestionId = null;
-    let selectedModuleId = null;
+document.getElementById('module-form').addEventListener('submit', function(e) {
+    e.preventDefault();
     
-    // Module selection change handler
-    document.getElementById('module-select').addEventListener('change', function() {
-        selectedModuleId = parseInt(this.value) || null;
-        
-        // Reset question selection
-        selectedQuestionId = null;
-        document.getElementById('titel').value = "";
-        document.getElementById('frage').value = "";
-        document.getElementById('save-btn').style.display = 'none';
-        document.getElementById('create-btn').style.display = 'inline-block';
-        
-        // Enable/disable create button based on module selection
-        document.getElementById('create-btn').disabled = !selectedModuleId;
-        document.querySelector('.delete').disabled = true;
-        
-        if (selectedModuleId) {
-            // Show module info
-            const selectedOption = this.options[this.selectedIndex];
-            document.getElementById('selected-module-name').textContent = selectedOption.textContent.trim();
-            
-            // Load module creator info
-            fetch(window.location.href, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    action: 'getModuleInfo',
-                    module_id: selectedModuleId
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('module-creator').textContent = data.creatorName;
-                    document.getElementById('module-info').style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('module-info').style.display = 'block';
-            });
-            
-            // Load questions for this module
-            loadQuestions(selectedModuleId);
+    const moduleName = document.getElementById('module_name').value.trim();
+    const moduleLabel = document.getElementById('module_label').value.trim();
+    
+    // Basic validation
+    if (!moduleName || !moduleLabel) {
+        alert('Bitte füllen Sie alle Pflichtfelder aus.');
+        return;
+    }
+    
+    // Validate module_name format (only letters, numbers, and underscores)
+    if (!/^[a-zA-Z0-9_]+$/.test(moduleName)) {
+        alert('Der technische Name darf nur Buchstaben, Zahlen und Unterstriche enthalten.');
+        return;
+    }
+    
+    // Send AJAX request
+    fetch(window.location.href, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            action: 'createModule',
+            module_name: moduleName,
+            module_label: moduleLabel
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Modul wurde erfolgreich erstellt!');
+            // Clear form
+            document.getElementById('module_name').value = '';
+            document.getElementById('module_label').value = '';
+            // Reload the page to show the new module
+            window.location.reload();
         } else {
-            document.getElementById('module-info').style.display = 'none';
-            document.getElementById('questions-container').innerHTML = 
-                '<p id="no-module-selected">Bitte wählen Sie zuerst ein Modul aus.</p>';
+            alert('Fehler beim Erstellen des Moduls: ' + (data.error || 'Unbekannter Fehler'));
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Fehler beim Erstellen des Moduls.');
     });
-    
-    function loadQuestions(moduleId) {
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'loadQuestions',
-                module_id: moduleId
-            })
+});
+
+// Function to refresh module list
+function refreshModuleList() {
+    fetch(window.location.href, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            action: 'getAllModules'
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                renderQuestions(data.questions);
-            } else {
-                alert('Fehler beim Laden der Fragen: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Fehler beim Laden der Fragen.');
-        });
-    }
-    
-    function renderQuestions(questions) {
-        const container = document.getElementById('questions-container');
-        
-        if (!questions || questions.length === 0) {
-            container.innerHTML = '<p>Keine Fragen für dieses Modul vorhanden.</p>';
-            return;
-        }
-        
-        container.innerHTML = '';
-        
-        questions.forEach(question => {
-            const taskDiv = document.createElement('div');
-            taskDiv.className = 'task';
-            taskDiv.innerHTML = `
-                <h3>Frage #${question.question_id}</h3>
-                <p>${question.question.replace(/\n/g, '<br>')}</p>
-                <span class="edit-icon">✏️</span>
-            `;
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const container = document.getElementById('modules-container');
             
-            taskDiv.querySelector('.edit-icon').addEventListener('click', function() {
-                selectQuestion(question.question_id, question.question);
+            if (!data.modules || data.modules.length === 0) {
+                container.innerHTML = '<p>Keine Module vorhanden.</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            data.modules.forEach(module => {
+                const moduleDiv = document.createElement('div');
+                moduleDiv.className = 'module-item';
+                
+                let createdAtText = '';
+                if (module.created_at) {
+                    createdAtText = `<p>Erstellt am: ${module.created_at}</p>`;
+                }
+                
+                moduleDiv.innerHTML = `
+                    <h3>${module.module_label}</h3>
+                    <p>ID: ${module.module_id}</p>
+                    <p>Name: ${module.module_name}</p>
+                    ${createdAtText}
+                    <a href="manage_module.php?module_id=${module.module_id}" class="edit-button">Bearbeiten</a>
+                `;
+                
+                container.appendChild(moduleDiv);
             });
-            
-            container.appendChild(taskDiv);
-        });
-    }
- 
-    function selectQuestion(id, frageText) {
-        selectedQuestionId = id;
-        document.getElementById('titel').value = "Frage #" + id;
-        document.getElementById('frage').value = frageText;
- 
-        document.getElementById('save-btn').style.display = 'inline-block';
-        document.getElementById('create-btn').style.display = 'none';
-        document.querySelector('.delete').disabled = false;
-    }
- 
-    document.getElementById('create-btn').addEventListener('click', function () {
-        const frage = document.getElementById('frage').value;
- 
-        if (!selectedModuleId) {
-            alert('Bitte wähle zuerst ein Modul aus.');
-            return;
         }
-        
-        if (!frage.trim()) {
-            alert('Bitte gib einen Fragetext ein.');
-            return;
-        }
- 
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'create',
-                module_id: selectedModuleId,
-                frage: frage
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Reload questions for the current module
-                loadQuestions(selectedModuleId);
-                // Clear the form
-                document.getElementById('frage').value = '';
-            } else {
-                alert('Fehler beim Erstellen der Frage: ' + (data.error || 'Unbekannter Fehler'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Fehler beim Erstellen der Frage.');
-        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
     });
- 
-    document.getElementById('save-btn').addEventListener('click', function () {
-        if (!selectedQuestionId) {
-            alert('Bitte wähle zuerst eine Aufgabe aus.');
-            return;
-        }
-        
-        if (!selectedModuleId) {
-            alert('Kein Modul ausgewählt.');
-            return;
-        }
-        
-        const frage = document.getElementById('frage').value;
-        
-        if (!frage.trim()) {
-            alert('Bitte gib einen Fragetext ein.');
-            return;
-        }
- 
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: new URLSearchParams({
-                action: 'save',
-                question_id: selectedQuestionId,
-                module_id: selectedModuleId,
-                frage: frage
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Reload questions for the current module
-                loadQuestions(selectedModuleId);
-            } else {
-                alert('Fehler beim Speichern der Frage: ' + (data.error || 'Unbekannter Fehler'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Fehler beim Speichern der Frage.');
-        });
-    });
- 
-    document.querySelector('.delete').addEventListener('click', function () {
-        if (!selectedQuestionId) {
-            alert('Bitte wähle zuerst eine Aufgabe aus.');
-            return;
-        }
-        if (!confirm('Willst du diese Aufgabe wirklich löschen?')) {
-            return;
-        }
- 
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: new URLSearchParams({
-                action: 'delete',
-                question_id: selectedQuestionId
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Reload questions for the current module
-                loadQuestions(selectedModuleId);
-                // Reset the form
-                document.getElementById('titel').value = '';
-                document.getElementById('frage').value = '';
-                document.getElementById('save-btn').style.display = 'none';
-                document.getElementById('create-btn').style.display = 'inline-block';
-                document.querySelector('.delete').disabled = true;
-                selectedQuestionId = null;
-            } else {
-                alert('Fehler beim Löschen der Frage: ' + (data.error || 'Unbekannter Fehler'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Fehler beim Löschen der Frage.');
-        });
-    });
- 
-    document.querySelector('.search-bar input').addEventListener('input', function () {
-        const searchTerm = this.value.toLowerCase();
-        const tasks = document.querySelectorAll('.task');
- 
-        tasks.forEach(task => {
-            const text = task.textContent.toLowerCase();
-            if (text.includes(searchTerm)) {
-                task.style.display = 'block';
-            } else {
-                task.style.display = 'none';
-            }
-        });
-    });
+}
 </script>
  
 </body>
  
 <?php include '../includes/footer.php'; ?>
+</html>
