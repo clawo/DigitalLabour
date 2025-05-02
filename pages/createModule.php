@@ -1,139 +1,68 @@
-<!DOCTYPE html>
-<html lang="de">
-
-<head>
-    <?php include '../includes/htmlHead.php'; ?>
-    <title>Module verwalten</title>
-</head>
-
-<?php include '../includes/header.php'; ?>
-
-<?php
-require_once '../includes/db_controller.php';
-
-$db = new DatabaseController();
-
-// check if user is logged in
-if (!isset($_SESSION['user'])) {
-    echo '<script>window.location.href = "../index.php";</script>';
-    exit();
-}
-
-// check if existing module ID is passed
-$moduleId = $_GET['module_id'] ?? null;
-$module = null;
-if ($moduleId) {
-    $moduleId = (int)$moduleId;
-    if ($moduleId <= 0) {
-        echo '<script>alert("Ungültige Modul-ID."); window.location.href = "../index.php";</script>';
-        exit();
-    }
-
-    $module = $db->getModuleById($moduleId);
-    if (!$module) {
-        echo '<script>alert("Modul nicht gefunden."); window.location.href = "../index.php";</script>';
-        exit();
-    }
-} else {
-    echo '<script>alert("Keine Modul-ID übergeben."); window.location.href = "../index.php";</script>';
-    exit();
-}
-
-// check if user is allowed to edit
-
-
-// ---------- new access check ----------
-if ($_SESSION['user']['role_id'] !== 1) {
-    echo '<script>alert("Zugriff auf diese Seite nicht erlaubt."); window.location.href = "../index.php";</script>';
-    exit();
-}
-
-// get module creator
-$moduleCreator = $db->getUserById($module['created_by']);
-
-// handle AJAX POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
-
-    if ($action === 'create') {
-        $moduleId = (int)($_POST['module_id'] ?? 0);
-        $text = trim($_POST['frage'] ?? '');
-        if ($moduleId > 0) {
-            $success = $db->addQuestion($moduleId, $text);
-
-            echo json_encode(['success' => $success]);
-            exit();
-        }
-    }
-
-    if ($action === 'save') {
-        $questionId = (int)($_POST['question_id'] ?? 0);
-        $newText = trim($_POST['frage'] ?? '');
-        if ($questionId > 0 && $newText !== '') {
-            $success = $db->updateQuestion($questionId, $newText);
-
-            echo json_encode(['success' => $success]);
-            exit();
-        }
-    }
-
-    if ($action === 'delete') {
-        $questionId = (int)($_POST['question_id'] ?? 0);
-        if ($questionId > 0) {
-            $success = $db->deleteQuestion($questionId);
-            echo json_encode(['success' => $success]);
-            exit();
-        }
-    }
-
-    echo json_encode(['success' => false, 'error' => 'Ungültige Anfrage.']);
-    exit();
-}
-
-// load questions
-$questions = $db->getQuestionsByModule($moduleId);
-?>
-
 <body>
 <div class="containerbody">
-    <div>
-        <h1><?= htmlspecialchars($module['module_label']) ?></h1>
-        <p>Angelegt von: <?= htmlspecialchars($moduleCreator['first_name'] . ' ' . $moduleCreator['last_name']) ?></p>
-    </div>
+    <h1><?= $createMode ? 'Neues Modul anlegen' : htmlspecialchars($module['module_label']) ?></h1>
 
-    <div class="search-bar">
-        <input type="text" placeholder="Fragen durchsuchen">
-    </div>
+    <?php if (!$createMode): ?>
+        <p>Angelegt von: <?= htmlspecialchars($moduleCreator['first_name'].' '.$moduleCreator['last_name']) ?></p>
+    <?php endif; ?>
 
     <div class="container">
-        <!-- Aufgaben-Liste -->
-        <div class="panel" id="task-panel">
-            <h2>WÄHLEN SIE EINE AUFGABE AUS</h2>
 
-            <?php foreach ($questions as $question): ?>
-                <div class="task">
-                    <h3>Frage #<?= htmlspecialchars($question['question_id']) ?></h3>
-                    <p><?= nl2br(htmlspecialchars($question['question'])) ?></p>
-                    <span class="edit-icon" onclick='selectQuestion(<?= (int)$question['question_id'] ?>, <?= json_encode($question['question'], JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>✏️</span>
-                </div>
-            <?php endforeach; ?>
-        </div>
+        <?php if ($createMode): ?>
+            <?php if (!empty($error)) echo '<p class="error">'.$error.'</p>'; ?>
 
-        <!-- Editor -->
-        <div class="panel editor">
-            <h2>EDITOR</h2>
-            <label for="titel">TITEL BEARBEITEN</label>
-            <input type="text" id="titel" placeholder="Titel der Frage..." readonly>
-            <label for="frage">FRAGE BEARBEITEN</label>
-            <textarea id="frage" rows="10" placeholder="Fragetext..."></textarea>
-            <div class="editor-buttons">
-                <button class="delete">AUFGABE LÖSCHEN</button>
-                <button id="save-btn" class="save" style="display: none;">SPEICHERN</button>
-                <button id="create-btn" class="save">FRAGE ERSTELLEN</button>
+            <div class="panel editor">
+                <h2>MODULDATEN</h2>
+
+                <form method="post">
+                    <label for="module_name">Name des Moduls</label>
+                    <input type="text" id="module_name" name="module_name"
+                           value="<?= htmlspecialchars($_POST['module_name'] ?? '') ?>">
+
+                    <label for="module_label">Label (Kurzbezeichnung)</label>
+                    <input type="text" id="module_label" name="module_label"
+                           value="<?= htmlspecialchars($_POST['module_label'] ?? '') ?>">
+
+                    <div class="editor-buttons">
+                        <button type="submit" name="create_module" class="save">Modul erstellen</button>
+                    </div>
+                </form>
             </div>
-        </div>
-    </div>
-</div>
+
+        <?php else: ?>
+            <!-- Aufgaben‑Liste -->
+            <div class="panel" id="task-panel">
+                <h2>WÄHLEN SIE EINE AUFGABE AUS</h2>
+
+                <?php foreach ($questions as $question): ?>
+                    <div class="task">
+                        <h3>Frage #<?= htmlspecialchars($question['question_id']) ?></h3>
+                        <p><?= nl2br(htmlspecialchars($question['question'])) ?></p>
+                        <span class="edit-icon"
+                              onclick='selectQuestion(<?= (int)$question["question_id"] ?>,
+                                                      <?= json_encode($question["question"],
+                                                                       JSON_HEX_APOS|JSON_HEX_QUOT) ?>)'>✏️</span>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Editor -->
+            <div class="panel editor">
+                <h2>EDITOR</h2>
+                <label for="titel">TITEL BEARBEITEN</label>
+                <input type="text" id="titel" placeholder="Titel der Frage..." readonly>
+                <label for="frage">FRAGE BEARBEITEN</label>
+                <textarea id="frage" rows="10" placeholder="Fragetext..."></textarea>
+                <div class="editor-buttons">
+                    <button class="delete">AUFGABE LÖSCHEN</button>
+                    <button id="save-btn" class="save" style="display:none;">SPEICHERN</button>
+                    <button id="create-btn" class="save">FRAGE ERSTELLEN</button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+    </div><!-- /.container -->
+</div><!-- /.containerbody -->
 
 <script>
     let selectedQuestionId = null;
