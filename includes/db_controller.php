@@ -1,3 +1,4 @@
+
 <?php
     require_once('db_connect.php');
 
@@ -7,47 +8,6 @@
         public function __construct() {
             echo '<script>console.log("Initializing DatabaseController...");</script>';
             $this->pdo = getDB();
-        }
-        public function handleRegister(DatabaseController $controller): ?string {
-            echo '<script>console.log("Handling registration...");</script>';
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                 return null;
-             }
-            $roleInput   = $_POST['rolle'] ?? '';
-            $roleId      = $roleInput === 'student' ? 2 : ($roleInput === 'dozent' ? 1 : 2);
-            $firstName   = trim($_POST['vorname'] ?? '');
-            $lastName    = trim($_POST['nachname'] ?? '');
-            $email       = trim($_POST['email'] ?? '');
-            $password    = $_POST['password'] ?? '';
-         
-            if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
-                return 'Bitte alle Pflichtfelder ausfüllen.';
-            }
-        
-            $data = [
-                'username'   => $email, // Username hier als E-Mail
-                'email'      => $email,
-                'first_name' => $firstName,
-                'last_name'  => $lastName,
-                'role_id'    => $roleId,
-                'password'   => $password
-            ];
-        
-            echo '<script>console.log("Data to be inserted: ' . json_encode($data) . '");</script>';
-            $result = $controller->registerUser($data);
-        
-            if ($result['success']) {
-                $_SESSION['user'] = [
-                    'user_id'  => $result['user_id'],
-                    'username' => $email,
-                    'role_id'  => $roleId,
-                    'email'    => $email,
-                ];
-                header('Location: welcome.php');
-                exit;
-            }
-        
-            return $result['message'] ?? 'Registrierung fehlgeschlagen.';
         }
         
         // ===== AUTHENTICATION =====
@@ -70,29 +30,22 @@
 
         public function registerUser($data) {
             // check if username or email already exists
-            echo '<script>console.log("Checking if username or email already exists.");</script>';
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$data['username'], $data['email']]);
-            echo '<script>console.log("Executing query to check for existing username or email.");</script>';
             if ($stmt->fetchColumn() > 0) {
-                echo '<script>console.log("Username or email already exists.");</script>';
                 return ['success' => false, 'message' => 'Username oder Email existiert bereits.'];
             }
-
-            echo '<script>console.log("Username and email are unique.");</script>';
-            echo '<script>console.log("Data: ' . json_encode($data) . '");</script>';
         
             // hash password and insert new user
             $stmt = $this->pdo->prepare("
                 INSERT INTO users (username, email, first_name, last_name, role_id, password)
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
-            echo '<script>console.log("Inserting new user into database.");</script>';
+
             $stmt->execute([
                 $data['username'], $data['email'], $data['first_name'], $data['last_name'],
                 $data['role_id'], password_hash($data['password'], PASSWORD_DEFAULT)
             ]);
-            echo '<script>console.log("User inserted successfully.");</script>';
         
             return ['success' => true, 'user_id' => $this->pdo->lastInsertId()];
         }        
@@ -202,14 +155,26 @@
 
 
         // ===== MODULES =====
-        public function getAllModules() {
-            return $this->pdo->query("SELECT * FROM modules")->fetchAll(PDO::FETCH_ASSOC);
+        public function createModule($module_name, $module_label, $userId) {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO modules (module_name, module_label, created_by)
+                VALUES (?, ?, ?)
+            ");
+            $stmt->execute([$module_name, $module_label, $userId]);
+            return $this->pdo->lastInsertId();
         }
 
-        public function getModuleById($moduleId) {
-            $stmt = $this->pdo->prepare("SELECT * FROM modules WHERE module_id = ?");
-            $stmt->execute([$moduleId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+        public function checkModuleCreatedByUser($moduleId, $userId) {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) FROM modules
+                WHERE module_id = ? AND created_by = ?
+            ");
+            $stmt->execute([$moduleId, $userId]);
+            return $stmt->fetchColumn() > 0;
+        }
+
+        public function getAllModules(): array {
+            return $this->pdo->query("SELECT * FROM modules")->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function getModulesFiltered($sortierung = 'name', $suche = '') {
@@ -239,6 +204,14 @@
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
+        public function getModuleById($moduleId): array {
+            $stmt = $this->pdo->prepare("SELECT * FROM modules WHERE module_id = ?");
+            $stmt->execute([$moduleId]);
+            $module = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $module;
+        }
+
         public function getModuleByName($moduleName) {
             $stmt = $this->pdo->prepare("SELECT * FROM modules WHERE module_name = ?");
             $stmt->execute([$moduleName]);
@@ -247,10 +220,48 @@
 
 
         // ===== QUESTIONS =====
+        public function addQuestion($moduleId, $questionText) {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO questions (module_id, question)
+                VALUES (?, ?)
+            ");
+            $stmt->execute([$moduleId, $questionText]);
+            return $this->pdo->lastInsertId();
+        }
+
+        public function updateQuestion($questionId, $newQuestionText) {
+            $stmt = $this->pdo->prepare("UPDATE questions SET question = ? WHERE question_id = ?");
+            return $stmt->execute([$newQuestionText, $questionId]);
+        }
+
+        public function deleteQuestion($questionId) {
+            $stmt = $this->pdo->prepare("DELETE FROM questions WHERE question_id = ?");
+            return $stmt->execute([$questionId]);
+        }
+
         public function getQuestionsByModule($moduleId) {
             $stmt = $this->pdo->prepare("SELECT * FROM questions WHERE module_id = ?");
             $stmt->execute([$moduleId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function getRandomQuestionsByModule($moduleId, $count) {
+            $count = (int)$count;
+            $stmt = $this->pdo->prepare("
+                SELECT * FROM questions
+                WHERE module_id = ?
+                ORDER BY RAND()
+                LIMIT $count
+            ");
+            $stmt->execute([$moduleId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+
+        public function getQuestionCountByModule($moduleId) {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM questions WHERE module_id = ?");
+            $stmt->execute([$moduleId]);
+            return $stmt->fetchColumn();
         }
 
         public function getQuestion($questionId) {
@@ -261,19 +272,40 @@
 
 
         // ===== MOCK EXAMS =====
-        public function createMockExam($userId, $moduleId, $grade) {
+        public function createMockExam($moduleId, $userId, $questions) {
             $stmt = $this->pdo->prepare("
-                INSERT INTO mock_exams (user_id, module_id, grade)
-                VALUES (?, ?, ?)
+                INSERT INTO mock_exams (module_id, user_id)
+                VALUES (?, ?)
             ");
-            $stmt->execute([$userId, $moduleId, $grade]);
-            return $this->pdo->lastInsertId();
+            $stmt->execute([$moduleId, $userId]);
+
+            $examId = $this->pdo->lastInsertId();
+
+            foreach ($questions as $question) {
+                $this->insertMockQuestion($examId, $question['question_id'], null, null, null);
+            }
+
+            return $examId;
         }
 
         public function getMockExam($examId) {
             $stmt = $this->pdo->prepare("SELECT * FROM mock_exams WHERE exam_id = ?");
             $stmt->execute([$examId]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        public function checkUserExamAccess($userId, $examId) {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) FROM mock_exams
+                WHERE user_id = ? AND exam_id = ?
+            ");
+            $stmt->execute([$userId, $examId]);
+
+            if ($stmt->fetchColumn() > 0) {
+                return $this->getMockExam($examId);
+            } else {
+                return false;
+            }
         }
 
         public function getExamsByUser($userId) {
@@ -409,7 +441,22 @@
                 WHERE exam_id = ?
             ");
             $stmt->execute([$examId]);
-            return $stmt->fetchColumn();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $avgGrade = round($result['avg_grade'], 1);
+
+            $possibleGrades = [1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, 4.3, 4.7, 5.0];
+            $closestGrade = null;
+            $closestDiff = PHP_INT_MAX;
+            foreach ($possibleGrades as $grade) {
+                $diff = abs($avgGrade - $grade);
+                if ($diff < $closestDiff) {
+                    $closestDiff = $diff;
+                    $closestGrade = $grade;
+                }
+            }
+
+            return $closestGrade;
         }
 
         public function countAnsweredQuestions($examId) {
