@@ -14,38 +14,44 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'dozent') {
     <title>Für Dozenten</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .action-buttons {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-        }
-        
-        .secondary-btn {
-            display: inline-block;
-            background-color: white;
-            color: #1e2a38;
-            padding: 8px 16px;
-            border: 1px solid #1e2a38;
-            border-radius: 4px;
+        /* Make sure the question button matches other links */
+        .question-button {
+            display: block;
+            margin-top: 20px;
+            background-color: #1e2a38;
+            color: white;
+            padding: 10px 15px;
             text-decoration: none;
-            font-size: 14px;
-            margin-right: 10px;
-            transition: all 0.3s ease;
+            border-radius: 5px;
+            width: fit-content;
+            font-weight: bold;
         }
         
-        .secondary-btn:hover {
-            background-color: #eef1f6;
+        .question-button:hover {
+            background-color: #2e3e50;
         }
         
-        .btn-icon {
-            margin-right: 5px;
+        /* Add a divider to separate it from the main menu */
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 25px 0;
         }
         
-        .section-title {
-            font-size: 18px;
+        /* Make it look like a standard menu but special */
+        .special-menu {
+            margin-top: 20px;
+        }
+        
+        .special-menu h3 {
+            color: #1e2a38;
             margin-bottom: 15px;
-            color: #555;
+        }
+        
+        /* Make the button stand out */
+        .highlight {
+            border-left: 4px solid #1e2a38;
+            padding-left: 10px;
         }
     </style>
 </head>
@@ -61,12 +67,17 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'dozent') {
             <li><a href="support.php">Support kontaktieren</a></li>
         </ul>
         
-        <div class="action-buttons">
-            <h3 class="section-title">Prüfungsverwaltung</h3>
-            <a href="create_questions.php" class="secondary-btn">
-                <span class="btn-icon">+</span> Prüfungsfragen erstellen
-            </a>
+        <div class="divider"></div>
+        
+        <div class="special-menu highlight">
+            <h3>Prüfungsverwaltung</h3>
+            <ul>
+                <li><a href="create_questions.php">Prüfungsfragen erstellen</a></li>
+            </ul>
         </div>
+        
+        <!-- Alternative button style if you prefer a button over a list item -->
+        <a href="create_questions.php" class="question-button">Prüfungsfragen erstellen</a>
     </main>
     <?php include 'footer.php'; ?>
 </body>
