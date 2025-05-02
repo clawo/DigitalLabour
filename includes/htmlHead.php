@@ -36,7 +36,6 @@ $cssLink = '../css/style' . ucfirst($currentPage) . '.css';
 
 <!-- Browser Icon -->
 <link rel="icon" href="images/logo.png" type="image/png">
-<a href="profile.php">My Profile</a>
 
 <!-- ==============================
      Globales Stylesheet (für die gesamte Website)
