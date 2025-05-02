@@ -118,7 +118,6 @@ $messageType = "";
 // Get all modules for the dropdown
 $modules = $db_controller->getAllModules();
 
-// Since there's no specific createQuestion method, we'll use a direct PDO query
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $moduleId = $_POST['module_id'] ?? '';
@@ -135,19 +134,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             // Get PDO connection directly
             $pdo = getDB();
             
+            // First, let's check the structure of the questions table
+            $tableInfoStmt = $pdo->query("DESCRIBE questions");
+            $tableColumns = $tableInfoStmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            // Create the SQL query based on the table structure
+            $columns = ['module_id', 'question'];
+            $values = [$moduleId, $questionText];
+            
+            // Add optional fields if they exist in the table
+            if (in_array('answer_example', $tableColumns)) {
+                $columns[] = 'answer_example';
+                $values[] = $answerExample;
+            }
+            
+            if (in_array('points', $tableColumns)) {
+                $columns[] = 'points';
+                $values[] = $points;
+            }
+            
+            // Add user ID if the column exists
+            if (in_array('created_by', $tableColumns)) {
+                $columns[] = 'created_by';
+                $values[] = $_SESSION['user']['user_id'];
+            }
+            
+            $columnsStr = implode(', ', $columns);
+            $placeholders = implode(', ', array_fill(0, count($columns), '?'));
+            
             // Insert the question
             $stmt = $pdo->prepare("
-                INSERT INTO questions (module_id, question, answer_example, points, created_by)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO questions ($columnsStr)
+                VALUES ($placeholders)
             ");
             
-            $result = $stmt->execute([
-                $moduleId,
-                $questionText,
-                $answerExample,
-                $points,
-                $_SESSION['user']['user_id']
-            ]);
+            $result = $stmt->execute($values);
             
             if ($result) {
                 $message = "Die Frage wurde erfolgreich erstellt.";
@@ -166,19 +187,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 }
 
-// Get recent questions created by this user
+// Get recent questions - without relying on created_by column
 try {
-    $userId = $_SESSION['user']['user_id'];
     $pdo = getDB();
     $stmt = $pdo->prepare("
         SELECT q.*, m.module_name, m.module_label 
         FROM questions q
         JOIN modules m ON q.module_id = m.module_id
-        WHERE q.created_by = ?
-        ORDER BY q.created_at DESC
-        LIMIT 5
+        ORDER BY q.question_id DESC
+        LIMIT 10
     ");
-    $stmt->execute([$userId]);
+    $stmt->execute();
     $recentQuestions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $recentQuestions = [];
@@ -236,9 +255,9 @@ try {
         </div>
         
         <div class="section">
-            <h2>Ihre kürzlich erstellten Fragen</h2>
+            <h2>Kürzlich erstellte Fragen</h2>
             <?php if (empty($recentQuestions)): ?>
-                <p>Sie haben noch keine Fragen erstellt.</p>
+                <p>Es wurden noch keine Fragen erstellt.</p>
             <?php else: ?>
                 <?php foreach ($recentQuestions as $index => $question): ?>
                     <div class="question-item">
@@ -247,8 +266,12 @@ try {
                         <?php if (!empty($question['answer_example'])): ?>
                             <p><strong>Beispielantwort:</strong> <?= htmlspecialchars($question['answer_example']) ?></p>
                         <?php endif; ?>
-                        <p><strong>Punkte:</strong> <?= htmlspecialchars($question['points']) ?></p>
-                        <p><strong>Erstellt am:</strong> <?= date('d.m.Y H:i', strtotime($question['created_at'])) ?></p>
+                        <?php if (isset($question['points'])): ?>
+                            <p><strong>Punkte:</strong> <?= htmlspecialchars($question['points']) ?></p>
+                        <?php endif; ?>
+                        <?php if (isset($question['created_at'])): ?>
+                            <p><strong>Erstellt am:</strong> <?= date('d.m.Y H:i', strtotime($question['created_at'])) ?></p>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
