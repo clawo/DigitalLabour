@@ -3,7 +3,7 @@
 
 <head>
     <?php include '../includes/htmlHead.php'; ?>
-    <title>Titel</title>
+    <title>Datenschutz</title>
 </head>
 
 <?php include '../includes/header.php'; ?>
