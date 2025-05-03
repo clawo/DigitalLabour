@@ -74,7 +74,7 @@
 
     <h2>9. Kontakt</h2>
     <p>
-      Für Fragen oder Anliegen bezüglich Ihrer Daten und dieser Datenschutzerklärung können Sie uns unter <a href="mailto:info@drive-autovermietung.com">info@drive-autovermietung.com</a> kontaktieren.
+      Für Fragen oder Anliegen bezüglich Ihrer Daten und dieser Datenschutzerklärung können Sie uns unter <a href="mailto:info@examwise.com">info@examwise.com</a> kontaktieren.
     </p>
   </div>
 </body>
