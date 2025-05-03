@@ -10,6 +10,7 @@
 
 <body>
 <div class="container">
+    <div class="box">
     <h1>Kontakt</h1>
     <p>Wenn Sie Fragen zur Nutzung von ExamWise oder allgemeine Anliegen haben, kontaktieren Sie uns gern:</p>
 
@@ -35,6 +36,7 @@
 
       <button type="submit">Nachricht senden</button>
     </form>
+  </div>
   </div>
 </body>
 

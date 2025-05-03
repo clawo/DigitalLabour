@@ -10,6 +10,7 @@
 
 <body>
 <div class="container">
+<div class="box">
     <h1>Allgemeine Geschäftsbedingungen (AGB)</h1>
     <p><strong>für die Nutzung der Website "ExamWise" der HSBA – Hamburg School of Business Administration</strong></p>
 
@@ -48,6 +49,7 @@
     <p>(2) Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, bleibt die Gültigkeit der übrigen Bestimmungen unberührt.</p>
     <p>(3) Erfüllungsort ist Hamburg.</p>
   </div>
+</div>
 </body>
 
 <?php include '../includes/footer.php'; ?>

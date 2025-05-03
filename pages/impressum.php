@@ -10,6 +10,7 @@
 
 <body>
 <div class="container">
+<div class="box">
     <h1>Impressum</h1>
 
     <h2>Angaben gemäß § 5 TMG</h2>
@@ -56,6 +57,7 @@
       Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.
     </p>
   </div>
+</div>
 </body>
 
 <?php include '../includes/footer.php'; ?>
