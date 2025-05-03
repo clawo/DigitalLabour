@@ -8,8 +8,8 @@ body {
   }
 
   .container {
-    max-width: 900px;
-    margin: auto;
+    max-width: 100%;
+    margin: 20px, 50px;
     background: white;
     padding: 30px;
     border-radius: 8px;
