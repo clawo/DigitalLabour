@@ -10,7 +10,7 @@
 
 <body>
 <div class="container">
-    <h1>Datenschutzerklärung für die Website der "Drive" - Autovermietung GmbH</h1>
+    <h1>Datenschutzerklärung für die Website der EXAMWISE</h1>
     <p><strong>Stand: 22.12.2023</strong></p>
 
     <h2>1. Verantwortliche Stelle</h2>
