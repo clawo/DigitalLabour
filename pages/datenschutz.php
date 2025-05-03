@@ -11,13 +11,13 @@
 <body>
 <div class="container">
     <h1>Datenschutzerklärung für die Website der EXAMWISE</h1>
-    <p><strong>Stand: 22.12.2023</strong></p>
+    <p><strong>Stand: 03.05.2025</strong></p>
 
     <h2>1. Verantwortliche Stelle</h2>
     <p>
       Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br>
-      Drive - Autovermietung GmbH Musterstraße 123 12345 Musterstadt<br>
-      E-Mail: <a href="mailto:info@drive-autovermietung.com">info@drive-autovermietung.com</a>
+      ExamWise der HSBA Musterstraße 123 12345 Musterstadt<br>
+      E-Mail: <a href="mailto:info@examwise.com">info@examwise.com</a>
     </p>
 
     <h2>2. Arten der gesammelten Daten</h2>
