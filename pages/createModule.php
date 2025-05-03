@@ -1,190 +1,219 @@
-<!DOCTYPE html>
-<html lang="de">
-
-<head>
-    <?php include '../includes/htmlHead.php'; ?>
-    <title>Grading with ChatGPT</title>
-</head>
-
-<?php include '../includes/header.php'; ?>
-
 <?php
+// This is a simplified version of the createModule.php page
+// that uses direct database queries to bypass any issues with the DatabaseController
+
+// Include necessary files
+require_once '../includes/db_connect.php';
 require_once '../includes/db_controller.php';
+session_start();
 
-$db = new DatabaseController();
-
-// Check if user is logged in
-if (!isset($_SESSION['user'])) {
-    echo '<script>window.location.href = "../index.php";</script>';
-    exit();
-}
-
-// Check if existing module ID is passed
-$moduleId = $_GET['module_id'] ?? null;
-if ($moduleId) {
-    $moduleId = (int)$moduleId;
-    if ($moduleId <= 0) {
-        echo '<script>alert("Ungültige Modul-ID."); window.location.href = "../index.php";</script>';
-        exit();
+// Function to check if a user is logged in and authorized
+function checkAuth() {
+    if (!isset($_SESSION['user'])) {
+        return false;
     }
-
-    $module = $db->getModuleById($moduleId);
-    if (!$module) {
-        echo '<script>alert("Modul nicht gefunden."); window.location.href = "../index.php";</script>';
-        exit();
+    
+    if ($_SESSION['user']['role_id'] !== 1) {
+        return false;
     }
-} else {
-    echo '<script>alert("Keine Modul-ID übergeben."); window.location.href = "../index.php";</script>';
-    exit();
+    
+    return true;
 }
 
-// Check if user is allowed to edit
-$moduleCreatedByUser = $db->checkModuleCreatedByUser($moduleId, $_SESSION['user']['user_id']);
-if ($_SESSION['user']['role_id'] !== 1 || !$moduleCreatedByUser) {
-    echo '<script>alert("Zugriff auf diese Seite nicht erlaubt."); window.location.href = "../index.php";</script>';
-    exit();
+// Get table structure to verify columns
+function getTableStructure($tableName) {
+    $pdo = getDB();
+    $stmt = $pdo->query("DESCRIBE $tableName");
+    $columns = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $columns[] = $row['Field'];
+    }
+    return $columns;
 }
 
-// Handle AJAX POST
+// Direct module creation function
+function createModuleDirect($moduleName, $moduleLabel, $createdBy) {
+    try {
+        // Get direct DB connection
+        $pdo = getDB();
+        
+        // Check if module name already exists
+        $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM modules WHERE module_name = ?");
+        $checkStmt->execute([$moduleName]);
+        if ($checkStmt->fetchColumn() > 0) {
+            return [false, "Ein Modul mit diesem Namen existiert bereits."];
+        }
+        
+        // Check table structure
+        $columns = getTableStructure("modules");
+        
+        // Create SQL based on actual table structure
+        $sql = "INSERT INTO modules (module_name, module_label, created_by";
+        $values = "(?, ?, ?";
+        $params = [$moduleName, $moduleLabel, $createdBy];
+        
+        // Add created_at if it exists
+        if (in_array('created_at', $columns)) {
+            $sql .= ", created_at";
+            $values .= ", NOW()";
+        }
+        
+        // Close the SQL statement
+        $sql .= ") VALUES " . $values . ")";
+        
+        // Log the SQL for debugging
+        error_log("SQL query: " . $sql);
+        error_log("Parameters: " . implode(", ", $params));
+        
+        // Create the module
+        $stmt = $pdo->prepare($sql);
+        $success = $stmt->execute($params);
+        
+        if (!$success) {
+            $error = implode(", ", $stmt->errorInfo());
+            return [false, "Datenbankfehler: " . $error];
+        }
+        
+        return [true, $pdo->lastInsertId()];
+    } catch (Exception $e) {
+        error_log("Error creating module: " . $e->getMessage());
+        return [false, "Fehler: " . $e->getMessage()];
+    }
+}
+
+// Initialize variables
+$error = "";
+$success = "";
+$moduleName = "";
+$moduleLabel = "";
+
+// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
-
-    if ($action === 'save') {
-        $questionId = (int)($_POST['question_id'] ?? 0);
-        $newText = trim($_POST['frage'] ?? '');
-        if ($questionId > 0 && $newText !== '') {
-            $success = $db->updateQuestion($questionId, $newText);
-
-            echo json_encode(['success' => $success]);
-            exit();
+    $moduleName = trim($_POST['module_name'] ?? '');
+    $moduleLabel = trim($_POST['module_label'] ?? '');
+    
+    // Basic validation
+    if (empty($moduleName) || empty($moduleLabel)) {
+        $error = "Beide Felder müssen ausgefüllt sein.";
+    } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $moduleName)) {
+        $error = "Der technische Name darf nur Buchstaben, Zahlen und Unterstriche enthalten.";
+    } else {
+        // Try to create the module
+        list($result, $message) = createModuleDirect(
+            $moduleName, 
+            $moduleLabel, 
+            $_SESSION['user']['user_id']
+        );
+        
+        if ($result) {
+            $success = "Modul erfolgreich erstellt! Modul-ID: " . $message;
+            $moduleName = "";
+            $moduleLabel = "";
+        } else {
+            $error = $message;
         }
     }
-
-    if ($action === 'delete') {
-        $questionId = (int)($_POST['question_id'] ?? 0);
-        if ($questionId > 0) {
-            $success = $db->deleteQuestion($questionId);
-            echo json_encode(['success' => $success]);
-            exit();
-        }
-    }
-
-    // Wenn kein gültiger action vorhanden ist:
-    echo json_encode(['success' => false, 'error' => 'Ungültige Anfrage.']);
-    exit();
 }
 
-// load questions
-$questions = $db->getQuestionsByModule($moduleId);
+// Check if user is authorized
+if (!checkAuth()) {
+    echo "Nicht autorisiert. <a href='../index.php'>Zurück</a>";
+    exit;
+}
+
+// Get existing modules
+$db = getDB();
+$modulesStmt = $db->query("SELECT * FROM modules ORDER BY module_label");
+$modules = $modulesStmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Debug table structure for modules table
+$moduleColumns = getTableStructure("modules");
+error_log("Modules table columns: " . implode(", ", $moduleColumns));
 ?>
 
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module erstellen</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; display: flex; }
+        .panel { flex: 1; padding: 20px; margin: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .error { color: #ff0000; background-color: #ffeeee; padding: 10px; border-radius: 5px; }
+        .success { color: #008000; background-color: #eeffee; padding: 10px; border-radius: 5px; }
+        .module-item { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
 <body>
-<div class="containerbody">
-    <div>
-        <h1>GRUNDLAGEN DER INFORMATIK</h1>
-        <p>Prof. Dr. Kamyar Sarshar</p>
-    </div>
-
-    <div class="search-bar">
-        <input type="text" placeholder="Fragen durchsuchen">
-    </div>
-
+    <h1>Module erstellen</h1>
+    <p>Hier können Sie neue Module erstellen und vorhandene Module ansehen.</p>
+    
+    <?php if (!empty($error)): ?>
+        <div class="error"><?php echo htmlspecialchars($error); ?></div>
+    <?php endif; ?>
+    
+    <?php if (!empty($success)): ?>
+        <div class="success"><?php echo htmlspecialchars($success); ?></div>
+    <?php endif; ?>
+    
     <div class="container">
-        <!-- Aufgaben-Liste -->
-        <div class="panel" id="task-panel">
-            <h2>WÄHLEN SIE EINE AUFGABE AUS</h2>
-
-            <?php foreach ($questions as $question): ?>
-                <div class="task">
-                    <h3>Frage #<?= htmlspecialchars($question['question_id']) ?></h3>
-                    <p><?= nl2br(htmlspecialchars($question['question'])) ?></p>
-                    <span class="edit-icon" onclick='selectQuestion(<?= (int)$question['question_id'] ?>, <?= json_encode($question['question'], JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>✏️</span>
-                </div>
-            <?php endforeach; ?>
+        <div class="panel">
+            <h2>VORHANDENE MODULE</h2>
+            <?php if (empty($modules)): ?>
+                <p>Keine Module vorhanden.</p>
+            <?php else: ?>
+                <?php foreach ($modules as $module): ?>
+                    <div class="module-item">
+                        <h3><?php echo htmlspecialchars($module['module_label']); ?></h3>
+                        <p>ID: <?php echo htmlspecialchars($module['module_id']); ?></p>
+                        <p>Name: <?php echo htmlspecialchars($module['module_name']); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
-
-        <!-- Editor -->
-        <div class="panel editor">
-            <h2>EDITOR</h2>
-            <label for="titel">TITEL BEARBEITEN</label>
-            <input type="text" id="titel" placeholder="Titel der Frage..." readonly>
-            <label for="frage">FRAGE BEARBEITEN</label>
-            <textarea id="frage" rows="10" placeholder="Fragetext..."></textarea>
-            <div class="editor-buttons">
-                <button class="delete">AUFGABE LÖSCHEN</button>
-                <button class="save">SPEICHERN</button>
-            </div>
+        
+        <div class="panel">
+            <h2>NEUES MODUL ERSTELLEN</h2>
+            <form method="post" action="">
+                <div>
+                    <label for="module_name">MODULE NAME (Technischer Name)</label>
+                    <input type="text" id="module_name" name="module_name" 
+                           placeholder="z.B. math_101" required
+                           value="<?php echo htmlspecialchars($moduleName); ?>">
+                    <p>Technischer Name des Moduls (ohne Leerzeichen, nur Buchstaben, Zahlen und Unterstriche)</p>
+                </div>
+                
+                <div>
+                    <label for="module_label">MODULE TITEL (Anzeigename)</label>
+                    <input type="text" id="module_label" name="module_label" 
+                           placeholder="z.B. Mathematik Grundlagen" required
+                           value="<?php echo htmlspecialchars($moduleLabel); ?>">
+                    <p>Titel des Moduls, wie er den Benutzern angezeigt wird</p>
+                </div>
+                
+                <div>
+                    <label>AUTOR</label>
+                    <input type="text" 
+                           value="<?php echo htmlspecialchars($_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name']); ?>" 
+                           disabled>
+                    <p>Dieses Modul wird unter Ihrem Namen erstellt</p>
+                </div>
+                
+                <button type="submit">MODUL ERSTELLEN</button>
+            </form>
         </div>
     </div>
-</div>
-
-<script>
-    let selectedQuestionId = null;
-
-    function selectQuestion(id, frageText) {
-        selectedQuestionId = id;
-        document.getElementById('titel').value = "Frage #" + id;
-        document.getElementById('frage').value = frageText;
-    }
-
-    document.querySelector('.save').addEventListener('click', function () {
-        if (!selectedQuestionId) {
-            alert('Bitte wähle zuerst eine Aufgabe aus.');
-            return;
-        }
-        const frage = document.getElementById('frage').value;
-
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: new URLSearchParams({
-                action: 'save',
-                question_id: selectedQuestionId,
-                frage: frage
-            })
-        }).then(function () {
-            window.location.reload();
-        });
-    });
-
-    document.querySelector('.delete').addEventListener('click', function () {
-        if (!selectedQuestionId) {
-            alert('Bitte wähle zuerst eine Aufgabe aus.');
-            return;
-        }
-        if (!confirm('Willst du diese Aufgabe wirklich löschen?')) {
-            return;
-        }
-
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: new URLSearchParams({
-                action: 'delete',
-                question_id: selectedQuestionId
-            })
-        }).then(function () {
-            window.location.reload();
-        });
-    });
-
-    document.querySelector('.search-bar input').addEventListener('input', function () {
-        const searchTerm = this.value.toLowerCase();
-        const tasks = document.querySelectorAll('.task');
-
-        tasks.forEach(task => {
-            const text = task.textContent.toLowerCase();
-            if (text.includes(searchTerm)) {
-                task.style.display = 'block';
-            } else {
-                task.style.display = 'none';
-            }
-        });
-    });
-</script>
-
+    
+    <!-- Debug info - remove in production -->
+    <div style="margin-top: 30px; padding: 15px; background-color: #f8f8f8; border: 1px solid #ddd;">
+        <h3>Debug Information</h3>
+        <p>Module table structure: <?php echo implode(", ", $moduleColumns); ?></p>
+    </div>
 </body>
-
-<?php include '../includes/footer.php'; ?>
-
 </html>

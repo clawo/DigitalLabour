@@ -1,0 +1,88 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  .body-wrapper {
+    margin: 5%;
+  }
+  
+  body {
+    font-family: 'Bebas Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+  }
+  
+  .container {
+    display: flex;
+    gap: 40px;
+  }
+  
+  .left,
+  .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+  }
+  
+  .tag {
+    background-color: #1e2a38;
+    color: white;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    width: fit-content;
+  }
+  
+  
+  .section-title {
+    font-weight: bold;
+  }
+  
+  .checkbox-group label,
+  .format-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .input-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .input-line input[type="text"] {
+    flex: 1;
+  }
+  
+  input[type="text"] {
+    padding: 4px;
+    margin-top: 5px;
+    width: 200px;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+
+  
+  .button {
+    background-color: #1e2a38;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-top: auto;
+  }
+
+  button:hover {
+    background-color: #2e3e50;
+}
+  
