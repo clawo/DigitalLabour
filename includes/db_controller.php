@@ -288,6 +288,15 @@
             return $examId;
         }
 
+        public function updateMockGrade($examId, $grade) {
+            $stmt = $this->pdo->prepare("
+                UPDATE mock_exams
+                SET grade = ?
+                WHERE exam_id = ?
+            ");
+            return $stmt->execute([$grade, $examId]);
+        }
+
         public function getMockExam($examId) {
             $stmt = $this->pdo->prepare("SELECT * FROM mock_exams WHERE exam_id = ?");
             $stmt->execute([$examId]);

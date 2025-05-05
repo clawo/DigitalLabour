@@ -154,7 +154,7 @@ if (isset($_GET['exam_id']) && !empty($_GET['exam_id'])) {
                 <?php if ($selectedExam && $module): ?>
                     <div class="section">
                         <h2>Modul: <?= htmlspecialchars($module['module_name']) ?></h2>
-                        <h3>Note: <?= htmlspecialchars(number_format($averageGrade, 1)) ?></h3>
+                        <h3>Note: <?= htmlspecialchars($averageGrade) ?></h3>
                     </div>
                     
                     <?php if (empty($examQuestions)): ?>

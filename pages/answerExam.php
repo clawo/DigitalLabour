@@ -61,6 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
         $db_controller->updateMockEvaluation($examId, $questionId, $feedback, $grade);
     }
 
+    $averageGrade = $db_controller->getAverageGradeByExam($examId);
+    if ($averageGrade) {
+        $db_controller->updateMockGrade($examId, $averageGrade);
+    }
+
     echo '<script>window.location.href = "grading.php?exam_id=' . $examId . '";</script>';
     exit;
 }
