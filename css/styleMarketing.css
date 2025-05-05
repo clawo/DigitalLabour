@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+
+
+
+  .intro {
+    text-align: center;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 40px 20px;
+  }
+
+  .card {
+    background-color: #1e2a38;
+    color: #fff;
+    border-radius: 20px;
+    padding: 30px 25px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .card h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .card ul {
+    list-style: disc;
+    padding-left: 20px;
+  }
+
+  .card li {
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 980px) {
+    .grid {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
