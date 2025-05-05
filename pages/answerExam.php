@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
     if ($averageGrade) {
         preg_match('/\d+(\.\d+)?/', $averageGrade, $matches);
         $averageGrade = $matches[0];
+        echo '<script>alert("Durchschnittsnote: ' . htmlspecialchars($averageGrade) . '");</script>';
 
         $db_controller->updateMockGrade($examId, $averageGrade);
     }
