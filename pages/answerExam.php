@@ -63,6 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antworten'])) {
 
     $averageGrade = $db_controller->getAverageGradeByExam($examId);
     if ($averageGrade) {
+        preg_match('/\d+(\.\d+)?/', $averageGrade, $matches);
+        $averageGrade = $matches[0];
+
         $db_controller->updateMockGrade($examId, $averageGrade);
     }
 

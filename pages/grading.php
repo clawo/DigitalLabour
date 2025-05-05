@@ -38,9 +38,6 @@ $module = $db_controller->getModuleById($mockExam['module_id']);
 
 // get average grade
 $averageGrade = $db_controller->getAverageGradeByExam($examId);
-if ($averageGrade) {
-    $db_controller->updateMockGrade($examId, $averageGrade);
-}
 
 // load mock questions for the exam
 $mockQuestions = $db_controller->getMockQuestionsByExam($examId);
