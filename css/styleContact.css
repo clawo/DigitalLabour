@@ -1,0 +1,66 @@
+  body {
+    font-family: 'Bebas Neue', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    color: #333;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    margin: auto;
+    
+  }
+
+  .box {
+    max-width: 100%;
+    margin: 50px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  h1 {
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 16px;
+    margin: 8px 0;
+  }
+
+  form {
+    margin-top: 20px;
+  }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #1e2a38;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #2c3d5d;
+  }

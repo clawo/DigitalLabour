@@ -6,9 +6,10 @@
         private $pdo;
 
         public function __construct() {
+            echo '<script>console.log("Initializing DatabaseController...");</script>';
             $this->pdo = getDB();
         }
-
+        
         // ===== AUTHENTICATION =====
         public function authorize($userId, $allowedRoles) {
             if (!is_array($allowedRoles)) {
@@ -17,7 +18,7 @@
         
             $stmt = $this->pdo->prepare("
                 SELECT r.role_name
-                FROM user u
+                FROM users u
                 JOIN roles r ON u.role_id = r.role_id
                 WHERE u.user_id = ?
             ");
@@ -29,7 +30,7 @@
 
         public function registerUser($data) {
             // check if username or email already exists
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM user WHERE username = ? OR email = ?");
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$data['username'], $data['email']]);
             if ($stmt->fetchColumn() > 0) {
                 return ['success' => false, 'message' => 'Username oder Email existiert bereits.'];
@@ -37,9 +38,10 @@
         
             // hash password and insert new user
             $stmt = $this->pdo->prepare("
-                INSERT INTO user (username, email, first_name, last_name, role_id, password)
+                INSERT INTO users (username, email, first_name, last_name, role_id, password)
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
+
             $stmt->execute([
                 $data['username'], $data['email'], $data['first_name'], $data['last_name'],
                 $data['role_id'], password_hash($data['password'], PASSWORD_DEFAULT)
@@ -50,7 +52,7 @@
 
         public function loginUser($usernameOrEmail, $password) {
             $stmt = $this->pdo->prepare("
-                SELECT * FROM user
+                SELECT * FROM users
                 WHERE username = ? OR email = ?
             ");
             $stmt->execute([$usernameOrEmail, $usernameOrEmail]);
@@ -66,7 +68,7 @@
 
         public function changePassword($userId, $newPassword) {
             $stmt = $this->pdo->prepare("
-                UPDATE user SET password = ?
+                UPDATE users SET password = ?
                 WHERE user_id = ?
             ");
             return $stmt->execute([
@@ -78,14 +80,14 @@
 
         // ===== USERS =====
         public function getAllUsers() {
-            $stmt = $this->pdo->query("SELECT user_id, username, email, first_name, last_name, role_id FROM user");
+            $stmt = $this->pdo->query("SELECT user_id, username, email, first_name, last_name, role_id FROM users");
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function getUsersByRole($roleId) {
             $stmt = $this->pdo->prepare("
                 SELECT u.user_id, u.username, u.email, u.first_name, u.last_name, r.role_name, r.role_label
-                FROM user u
+                FROM users u
                 JOIN roles r ON u.role_id = r.role_id
                 WHERE u.role_id = ?
             ");
@@ -94,20 +96,20 @@
         }
         
         public function getUserById($userId) {
-            $stmt = $this->pdo->prepare("SELECT * FROM user WHERE user_id = ?");
+            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE user_id = ?");
             $stmt->execute([$userId]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
         public function getUserByUsername($username) {
-            $stmt = $this->pdo->prepare("SELECT * FROM user WHERE username = ?");
+            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute([$username]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }        
 
         public function createUser($data) {
             $stmt = $this->pdo->prepare("
-                INSERT INTO user (username, email, first_name, last_name, role_id, password)
+                INSERT INTO users (username, email, first_name, last_name, role_id, password)
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
@@ -119,7 +121,7 @@
 
         public function updateUser($userId, $data) {
             $stmt = $this->pdo->prepare("
-                UPDATE user SET username = ?, email = ?, first_name = ?, last_name = ?, role_id = ?
+                UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, role_id = ?
                 WHERE user_id = ?
             ");
             return $stmt->execute([
@@ -129,7 +131,7 @@
         }
 
         public function deleteUser($userId) {
-            $stmt = $this->pdo->prepare("DELETE FROM user WHERE user_id = ?");
+            $stmt = $this->pdo->prepare("DELETE FROM users WHERE user_id = ?");
             return $stmt->execute([$userId]);
         }
 
@@ -153,14 +155,61 @@
 
 
         // ===== MODULES =====
-        public function getAllModules() {
+        public function createModule($module_name, $module_label, $userId) {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO modules (module_name, module_label, created_by)
+                VALUES (?, ?, ?)
+            ");
+            $stmt->execute([$module_name, $module_label, $userId]);
+            return $this->pdo->lastInsertId();
+        }
+
+        public function checkModuleCreatedByUser($moduleId, $userId) {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) FROM modules
+                WHERE module_id = ? AND created_by = ?
+            ");
+            $stmt->execute([$moduleId, $userId]);
+            return $stmt->fetchColumn() > 0;
+        }
+
+        public function getAllModules(): array {
             return $this->pdo->query("SELECT * FROM modules")->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function getModuleById($moduleId) {
+        public function getModulesFiltered($sortierung = 'name', $suche = '') {
+            $allowedSortFields = [
+                'name' => 'module_name'
+            ];
+
+            // fallback to default sort field
+            $sortField = $allowedSortFields[$sortierung] ?? 'module_name';
+
+            $query = "SELECT * FROM modules";
+
+            if (!empty($suche)) {
+                $query .= " WHERE module_name LIKE :suche OR module_label LIKE :suche";
+            }
+
+            $query .= " ORDER BY $sortField ASC";
+
+            $stmt = $this->pdo->prepare($query);
+
+            if (!empty($suche)) {
+                $sucheParam = '%' . $suche . '%';
+                $stmt->bindParam(':suche', $sucheParam, PDO::PARAM_STR);
+            }
+
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function getModuleById($moduleId): array {
             $stmt = $this->pdo->prepare("SELECT * FROM modules WHERE module_id = ?");
             $stmt->execute([$moduleId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $module = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $module;
         }
 
         public function getModuleByName($moduleName) {
@@ -171,10 +220,48 @@
 
 
         // ===== QUESTIONS =====
+        public function addQuestion($moduleId, $questionText) {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO questions (module_id, question)
+                VALUES (?, ?)
+            ");
+            $stmt->execute([$moduleId, $questionText]);
+            return $this->pdo->lastInsertId();
+        }
+
+        public function updateQuestion($questionId, $newQuestionText) {
+            $stmt = $this->pdo->prepare("UPDATE questions SET question = ? WHERE question_id = ?");
+            return $stmt->execute([$newQuestionText, $questionId]);
+        }
+
+        public function deleteQuestion($questionId) {
+            $stmt = $this->pdo->prepare("DELETE FROM questions WHERE question_id = ?");
+            return $stmt->execute([$questionId]);
+        }
+
         public function getQuestionsByModule($moduleId) {
             $stmt = $this->pdo->prepare("SELECT * FROM questions WHERE module_id = ?");
             $stmt->execute([$moduleId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function getRandomQuestionsByModule($moduleId, $count) {
+            $count = (int)$count;
+            $stmt = $this->pdo->prepare("
+                SELECT * FROM questions
+                WHERE module_id = ?
+                ORDER BY RAND()
+                LIMIT $count
+            ");
+            $stmt->execute([$moduleId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+
+        public function getQuestionCountByModule($moduleId) {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM questions WHERE module_id = ?");
+            $stmt->execute([$moduleId]);
+            return $stmt->fetchColumn();
         }
 
         public function getQuestion($questionId) {
@@ -185,13 +272,29 @@
 
 
         // ===== MOCK EXAMS =====
-        public function createMockExam($userId, $moduleId, $grade) {
+        public function createMockExam($moduleId, $userId, $questions) {
             $stmt = $this->pdo->prepare("
-                INSERT INTO mock_exams (user_id, module_id, grade)
-                VALUES (?, ?, ?)
+                INSERT INTO mock_exams (module_id, user_id)
+                VALUES (?, ?)
             ");
-            $stmt->execute([$userId, $moduleId, $grade]);
-            return $this->pdo->lastInsertId();
+            $stmt->execute([$moduleId, $userId]);
+
+            $examId = $this->pdo->lastInsertId();
+
+            foreach ($questions as $question) {
+                $this->insertMockQuestion($examId, $question['question_id'], null, null, null);
+            }
+
+            return $examId;
+        }
+
+        public function updateMockGrade($examId, $grade) {
+            $stmt = $this->pdo->prepare("
+                UPDATE mock_exams
+                SET grade = ?
+                WHERE exam_id = ?
+            ");
+            return $stmt->execute([$grade, $examId]);
         }
 
         public function getMockExam($examId) {
@@ -200,12 +303,27 @@
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
+        public function checkUserExamAccess($userId, $examId) {
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) FROM mock_exams
+                WHERE user_id = ? AND exam_id = ?
+            ");
+            $stmt->execute([$userId, $examId]);
+
+            if ($stmt->fetchColumn() > 0) {
+                return $this->getMockExam($examId);
+            } else {
+                return false;
+            }
+        }
+
         public function getExamsByUser($userId) {
             $stmt = $this->pdo->prepare("
                 SELECT me.*, m.module_name, m.module_label
                 FROM mock_exams me
                 JOIN modules m ON me.module_id = m.module_id
                 WHERE me.user_id = ?
+                ORDER BY me.created_at DESC
             ");
             $stmt->execute([$userId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -311,7 +429,7 @@
         public function getAverageGradePerUser() {
             return $this->pdo->query("
                 SELECT u.user_id, u.username, AVG(me.grade) as avg_grade
-                FROM user u
+                FROM users u
                 JOIN mock_exams me ON u.user_id = me.user_id
                 GROUP BY u.user_id
             ")->fetchAll(PDO::FETCH_ASSOC);
@@ -333,7 +451,25 @@
                 WHERE exam_id = ?
             ");
             $stmt->execute([$examId]);
-            return $stmt->fetchColumn();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $avgGrade = round($result['avg_grade'], 1);
+
+            $possibleGrades = [1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0, 4.3, 4.7, 5.0];
+            $closestGrade = null;
+            $closestDiff = PHP_INT_MAX;
+            foreach ($possibleGrades as $grade) {
+                $diff = abs($avgGrade - $grade);
+                if ($diff < $closestDiff) {
+                    $closestDiff = $diff;
+                    $closestGrade = $grade;
+                }
+            }
+
+            if ($closestGrade > 4.0) {
+                $closestGrade = $closestGrade . " (nicht bestanden)";
+            }
+            return $closestGrade;
         }
 
         public function countAnsweredQuestions($examId) {
