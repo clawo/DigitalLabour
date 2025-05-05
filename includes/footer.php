@@ -164,8 +164,9 @@
 
     <!-- Spalte 1: Dozenten -->
     <div class="footer-column">
-      <h3>Für Dozenten</h3>
-      <a href="#">Mock erstellen</a>
+        <h3>Für Dozenten</h3>
+        <a href="/pages/createModule.php">Modul erstellen</a>
+        <a href="/pages/create_questions.php">Fragen erstellen</a>
     </div>
 
     <!-- Spalte 2: Studenten -->

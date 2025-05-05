@@ -1,3 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <?php include '../includes/htmlHead.php'; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module erstellen</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; }
+        .body-wrapper { padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; display: flex; }
+        .panel { flex: 1; padding: 20px; margin: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .error { color: #ff0000; background-color: #ffeeee; padding: 10px; border-radius: 5px; }
+        .success { color: #008000; background-color: #eeffee; padding: 10px; border-radius: 5px; }
+        .module-item { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+
+<?php include '../includes/header.php'; ?>
 <?php
 // This is a simplified version of the createModule.php page
 // that uses direct database queries to bypass any issues with the DatabaseController
@@ -130,27 +154,8 @@ $modules = $modulesStmt->fetchAll(PDO::FETCH_ASSOC);
 $moduleColumns = getTableStructure("modules");
 error_log("Modules table columns: " . implode(", ", $moduleColumns));
 ?>
-
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module erstellen</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; display: flex; }
-        .panel { flex: 1; padding: 20px; margin: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        .error { color: #ff0000; background-color: #ffeeee; padding: 10px; border-radius: 5px; }
-        .success { color: #008000; background-color: #eeffee; padding: 10px; border-radius: 5px; }
-        .module-item { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"] { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; }
-        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-    </style>
-</head>
 <body>
+<div class="body-wrapper">
     <h1>Module erstellen</h1>
     <p>Hier können Sie neue Module erstellen und vorhandene Module ansehen.</p>
     
@@ -215,5 +220,7 @@ error_log("Modules table columns: " . implode(", ", $moduleColumns));
         <h3>Debug Information</h3>
         <p>Module table structure: <?php echo implode(", ", $moduleColumns); ?></p>
     </div>
+</div>
 </body>
+<?php include '../includes/footer.php'; ?>
 </html>
