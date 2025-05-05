@@ -1,5 +1,14 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <?php include '../includes/htmlHead.php'; ?>
+    <title>Registrieren</title>
+</head>
+
+<?php include '../includes/header.php'; ?>
+
 <?php
-require_once '../includes/header.php';
 require_once '../includes/db_controller.php';
 
 $db_controller = new DatabaseController();
@@ -80,3 +89,4 @@ function handleRegister(): ?string {
 </main>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+</html>

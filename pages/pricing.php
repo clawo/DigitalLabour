@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <?php include '../includes/htmlHead.php'; ?>
-    <link rel="stylesheet" href="/assets/css/pricing.css">
-    <title>Preise | HSBA.MOCK</title>
+    <title>Preise</title>
 </head>
 
 <?php include '../includes/header.php'; ?>
