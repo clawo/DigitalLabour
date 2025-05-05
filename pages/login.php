@@ -1,16 +1,25 @@
-<?php
-require_once '../includes/header.php';
+<!DOCTYPE html>
+<html lang="de">
 
+<head>
+    <?php include '../includes/htmlHead.php'; ?>
+    <title>Login</title>
+</head>
+
+<?php include '../includes/header.php'; ?>
+
+<?php
 // if the user is already logged in, redirect to the index page
 if (isset($_SESSION['user'])) {
     echo '<script>window.location.href = "../index.php";</script>';
     exit;
 }
 ?>
+<body>
 <!-- ==========================
      Login-Bereich
      ========================== -->
-<main class="login-container">
+<div class="login-container">
   <h1 class="login-title">LOGIN</h1>
 
   <?php if (!empty($errorMessage)): ?>
@@ -27,9 +36,11 @@ if (isset($_SESSION['user'])) {
 
     <button type="submit" class="login-btn">Login</button>
   </form>
-</main>
-
+</div>
+</body>
 <?php include '../includes/footer.php'; ?>
+
+</html>
 <?php
 require_once '../includes/db_controller.php';
 

@@ -75,12 +75,12 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user']['user_id'])) {
                             Probeklausur anlegen
                         </a>
                         <div class="divider"></div>
-                        <a href="pages/createModule.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">
-                            Fragen bearbeiten
-                        </a>
-                        <div class="divider"></div>
                         <a href="pages/create_questions.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">
                             Fragen hinzufügen
+                        </a>
+                        <div class="divider"></div>
+                        <a href="pages/editQuestions.php?module_id=<?= urlencode($module['module_id']) ?>" class="button">
+                            Fragen bearbeiten
                         </a>
                     <?php endif; ?>
                 </div>

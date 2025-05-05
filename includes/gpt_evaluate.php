@@ -15,9 +15,9 @@ function evaluateAnswer($question, $answer) {
     }
 
     // Erstellen des Prompts
-    $prompt = "Bewerte die folgende Antwort auf die Frage nach dem deutschen Notensystem mit den Noten (1.0, 1.3, 1.7, 2.0, ..., 6.0). Gib das Ergebnis bitte in **diesem strukturierten Format** aus:
+    $prompt = "Bewerte die folgende Antwort auf die Frage nach dem deutschen Notensystem mit den Noten (1.0, 1.3, 1.7, 2.0, ..., 5.0). Gib das Ergebnis bitte in **diesem strukturierten Format** aus:
 
-    **Note:** <Note zwischen 1.0 und 6.0>  
+    **Note:** <Note zwischen 1.0 und 5.0>  
     **Begründung & Verbesserung:** <kurze Bewertung, warum die Note vergeben wurde und gib einen konkreten Vorschlag, wie die Antwort verbessert werden kann>  
     Hier ist die Frage und die Antwort:
 

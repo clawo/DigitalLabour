@@ -3,6 +3,11 @@
    =========================== */
 
 /* Container für Login-Inhalt */
+body {
+    margin: 0;
+  }
+
+  /* Container für das Login-Formular */
 .login-container {
     max-width: 400px;
     margin: 100px auto;

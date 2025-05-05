@@ -456,6 +456,9 @@
                 }
             }
 
+            if ($closestGrade > 4.0) {
+                $closestGrade = $closestGrade . " (nicht bestanden)";
+            }
             return $closestGrade;
         }
 

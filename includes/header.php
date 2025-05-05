@@ -23,9 +23,6 @@ $userRole = isset($_SESSION['user']['role_id']) ? $_SESSION['user']['role_id'] :
 // Rollen-IDs: 1 = Dozent, 2 = Student (aus Ihrem Code abgeleitet)
 $isDozent = $userRole == 1;
 $isStudent = $userRole == 2;
-
-echo '<script>console.log("User ID: ' . ($_SESSION['user']['user_id'] ?? 'nicht gesetzt') . '");</script>';
-echo '<script>console.log("User Role: ' . ($userRole ?? 'nicht gesetzt') . '");</script>';
 ?>
 
 <!-- ==============================
