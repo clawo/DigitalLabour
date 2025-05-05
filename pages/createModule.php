@@ -216,10 +216,10 @@ error_log("Modules table columns: " . implode(", ", $moduleColumns));
     </div>
     
     <!-- Debug info - remove in production -->
-    <div style="margin-top: 30px; padding: 15px; background-color: #f8f8f8; border: 1px solid #ddd;">
-        <h3>Debug Information</h3>
-        <p>Module table structure: <?php echo implode(", ", $moduleColumns); ?></p>
-    </div>
+<!--    <div style="margin-top: 30px; padding: 15px; background-color: #f8f8f8; border: 1px solid #ddd;">-->
+<!--        <h3>Debug Information</h3>-->
+<!--        <p>Module table structure: --><?php //echo implode(", ", $moduleColumns); ?><!--</p>-->
+<!--    </div>-->
 </div>
 </body>
 <?php include '../includes/footer.php'; ?>

@@ -39,7 +39,7 @@
   .hero {
     text-align: center;
     padding: 80px 20px;
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
   }
   .hero h1 {
     font-size: 2.5rem;

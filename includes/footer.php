@@ -171,8 +171,8 @@
 
     <!-- Spalte 2: Studenten -->
     <div class="footer-column">
-      <h3>Für Studenten</h3>
-      <a href="#">Mock beantworten</a>
+        <h3>Für Studenten</h3>
+        <a href="../pages/profile.php">Profil</a>
     </div>
 
     <!-- Spalte 3: Allgemeines -->
