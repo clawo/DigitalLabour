@@ -307,7 +307,6 @@
             $stmt = $this->pdo->prepare("
                 SELECT COUNT(*) FROM mock_exams
                 WHERE user_id = ? AND exam_id = ?
-                ORDER BY created_at DESC
             ");
             $stmt->execute([$userId, $examId]);
 
@@ -324,6 +323,7 @@
                 FROM mock_exams me
                 JOIN modules m ON me.module_id = m.module_id
                 WHERE me.user_id = ?
+                ORDER BY me.created_at DESC
             ");
             $stmt->execute([$userId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
