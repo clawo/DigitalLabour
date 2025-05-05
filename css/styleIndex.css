@@ -1,8 +1,11 @@
 /* ==============================
    STYLE: Startseite / index.php
    ============================== */
+  body {
+    margin: 0;
+  }
 
-   .home-container {
+  .home-container {
     max-width: 1200px;
     margin: 100px auto;
     padding: 0 20px;
