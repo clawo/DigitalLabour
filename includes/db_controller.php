@@ -307,6 +307,7 @@
             $stmt = $this->pdo->prepare("
                 SELECT COUNT(*) FROM mock_exams
                 WHERE user_id = ? AND exam_id = ?
+                ORDER BY created_at DESC
             ");
             $stmt->execute([$userId, $examId]);
 
