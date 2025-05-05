@@ -3,14 +3,14 @@
 
 <head>
     <?php include '../includes/htmlHead.php'; ?>
-    <title>Impressum</title>
+    <title>Marketing</title>
 </head>
 
 <?php include '../includes/header.php'; ?>
 
 <body>
 <section class="intro">
-    <p>ExamWise unterstützt den gesamten Bildungsprozess – von der individuellen Prüfungsvorbereitung über die digitale Lehre bis zur institutionellen Qualitätssicherung.</p>
+    <h1>ExamWise unterstützt den gesamten Bildungsprozess – von der individuellen Prüfungsvorbereitung über die digitale Lehre bis zur institutionellen Qualitätssicherung.</h1>
   </section>
 
   <section class="grid">
