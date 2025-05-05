@@ -218,25 +218,7 @@ $isStudent = $userRole == 2;
 
     <!-- Navigation -->
     <div class="nav">
-        <a href="../index.php" <?= $currentPage === 'index' ? 'class="active"' : '' ?>>Suchen</a>
-        
-        <?php if ($loggedIn): ?>
-            <?php if ($isDozent): ?>
-                <!-- Dozenten-spezifische Navigation -->
-                <a href="../pages/dozenten.php" <?= $currentPage === 'dozenten' ? 'class="active"' : '' ?>>Mein Dozentenbereich</a>
-            <?php elseif ($isStudent): ?>
-                <!-- Studenten-spezifische Navigation -->
-                <a href="../pages/studenten.php" <?= $currentPage === 'studenten' ? 'class="active"' : '' ?>>Mein Studentenbereich</a>
-            <?php else: ?>
-                <!-- Fallback - alle Links anzeigen -->
-                <a href="../pages/dozenten.php">Für Dozenten</a>
-                <a href="../pages/studenten.php">Für Studenten</a>
-            <?php endif; ?>
-        <?php else: ?>
-            <!-- Nicht eingeloggt - Standard-Navigation -->
-            <a href="../pages/dozenten.php">Für Dozenten</a>
-            <a href="../pages/studenten.php">Für Studenten</a>
-        <?php endif; ?>
+        <a href="../index.php" <?= $currentPage === 'index' ? 'class="active"' : '' ?>>Module</a>
     </div>
 
     <!-- Benutzer-Aktionen (Login/Logout/Profil) -->

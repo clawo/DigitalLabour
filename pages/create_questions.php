@@ -235,15 +235,15 @@ try {
                     <textarea id="question_text" name="question_text" required placeholder="Geben Sie hier Ihre Prüfungsfrage ein..."><?= htmlspecialchars($_POST['question_text'] ?? '') ?></textarea>
                 </div>
                 
-                <div>
-                    <label for="answer_example"><strong>Beispielantwort (optional):</strong></label>
-                    <textarea id="answer_example" name="answer_example" placeholder="Geben Sie hier eine Beispielantwort oder Bewertungskriterien ein..."><?= htmlspecialchars($_POST['answer_example'] ?? '') ?></textarea>
-                </div>
+<!--                <div>-->
+<!--                    <label for="answer_example"><strong>Beispielantwort (optional):</strong></label>-->
+<!--                    <textarea id="answer_example" name="answer_example" placeholder="Geben Sie hier eine Beispielantwort oder Bewertungskriterien ein...">--><?php //= htmlspecialchars($_POST['answer_example'] ?? '') ?><!--</textarea>-->
+<!--                </div>-->
                 
-                <div>
-                    <label for="points"><strong>Punkte:</strong></label>
-                    <input type="number" id="points" name="points" min="1" max="100" value="<?= htmlspecialchars($_POST['points'] ?? '10') ?>" required>
-                </div>
+<!--                <div>-->
+<!--                    <label for="points"><strong>Punkte:</strong></label>-->
+<!--                    <input type="number" id="points" name="points" min="1" max="100" value="--><?php //= htmlspecialchars($_POST['points'] ?? '10') ?><!--" required>-->
+<!--                </div>-->
                 
                 <div class="preview-container">
                     <div class="preview-title">Vorschau:</div>
