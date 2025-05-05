@@ -95,7 +95,8 @@ $isStudent = $userRole == 2;
         gap: 100px;
         font-size: 1.8rem;
         flex-wrap: wrap;
-        justify-content: center;
+        /*justify-content: center;*/
+        width: 59%;
     }
 
     .nav a {
