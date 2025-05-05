@@ -11,16 +11,13 @@
             padding: 20px;
         }
         .exams-list {
-            float: left;
             width: 30%;
             padding: 15px;
             background-color: #f5f5f5;
             border-radius: 5px;
-            margin-right: 2%;
         }
         .exam-details {
-            float: left;
-            width: 65%;
+            width: 68%;
             padding: 15px;
             background-color: #f9f9f9;
             border-radius: 5px;
@@ -53,6 +50,10 @@
             background-color: white;
             border-radius: 3px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .clearfix {
+            display: flex;
+            gap: 2%;
         }
         .clearfix::after {
             content: "";
