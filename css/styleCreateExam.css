@@ -1,6 +1,10 @@
 * {
     box-sizing: border-box;
   }
+
+  html {
+    overflow-y: scroll;
+  }
   
   .body-wrapper {
     margin: 5%;
