@@ -17,12 +17,12 @@
     transition: background-color 0.3s;
   }
   .btn-primary {
-    background-color: #007BFF;
+    background-color: #1e2a38;
     color: #fff;
     border: none;
   }
   .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #2e3e50;
   }
   .btn-outline {
     background-color: #e6e6e6;

@@ -181,6 +181,7 @@
       <a href="../pages/contact.php">Kontakt</a>
       <a href="../pages/login.php">Login / Registrieren</a>
       <a href="../pages/marketing.php">Vorteile von ExamWise</a>
+      <a href="../pages/pricing.php">Preise</a>
     </div>
   </div>
 
