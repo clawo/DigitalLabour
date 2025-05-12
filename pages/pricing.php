@@ -29,7 +29,7 @@
       <button class="btn btn-outline">Jetzt wählen</button>
     </div>
     <div class="package-card">
-      <h2>Plus</h2>
+      <h2>Pro</h2>
       <p class="price">10 €<span>/Monat</span></p>
       <ul>
         <li>20 Mock-Examen</li>
@@ -38,7 +38,7 @@
       <button class="btn btn-outline">Jetzt wählen</button>
     </div>
     <div class="package-card">
-      <h2>Pro</h2>
+      <h2>Sorglos</h2>
       <p class="price">Hochschule Trägt die Kosten<span></span></p>
       <ul>
         <li>20 Mock-Examen</li>
