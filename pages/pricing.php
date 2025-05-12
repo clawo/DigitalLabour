@@ -23,16 +23,7 @@
       <h2>Basic</h2>
       <p class="price">3 €<span>/Monat</span></p>
       <ul>
-        <li>5 Mock-Examen</li>
-        <li>KI-Auswertung</li>
-      </ul>
-      <button class="btn btn-outline">Jetzt wählen</button>
-    </div>
-    <div class="package-card">
-      <h2>Plus</h2>
-      <p class="price">6 €<span>/Monat</span></p>
-      <ul>
-        <li>12 Mock-Examen</li>
+        <li>1 Mock-Examen</li>
         <li>KI-Auswertung</li>
       </ul>
       <button class="btn btn-outline">Jetzt wählen</button>
@@ -41,7 +32,16 @@
       <h2>Pro</h2>
       <p class="price">10 €<span>/Monat</span></p>
       <ul>
-        <li>30 Mock-Examen</li>
+        <li>20 Mock-Examen</li>
+        <li>KI-Auswertung</li>
+      </ul>
+      <button class="btn btn-outline">Jetzt wählen</button>
+    </div>
+    <div class="package-card">
+      <h2>Sorglos</h2>
+      <p class="price">Hochschule Trägt die Kosten<span></span></p>
+      <ul>
+        <li>20 Mock-Examen</li>
         <li>KI-Auswertung</li>
       </ul>
       <button class="btn btn-outline">Jetzt wählen</button>
